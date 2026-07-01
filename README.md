@@ -27,8 +27,9 @@ Account: V1
 - IsMinusSignAnExpense (used on import file)
 - ImporterType
 
-BudgetCategory:
+BudgetCategory: V1
 - Name (Primary key)
+- Parent (Nullable)
 - IsExcludedFromSpendingTotal
 
 Rule: V1
