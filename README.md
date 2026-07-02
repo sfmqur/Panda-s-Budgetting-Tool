@@ -1,57 +1,110 @@
-# Panda's Budgetting Tool
-A tool used for autoimport of account statements in order to analyze spending. 
+# Panda's Budgeting Tool
 
-## Future Features
-- Account Statement import into accounts
-- On Import, it fires the conditions and rules to sort into budget categories
-  - On account Creation, can select an importer Type
-  - There is an importer factory to handle the different import formats. 
-## Implemented Features
+A desktop budgeting tool that auto-imports account statements, categorizes transactions via rules, and analyzes spending against budget targets.
 
+## Tech Stack
 
+- **.NET 10 / Avalonia 12** — cross-platform desktop UI
+- **CommunityToolkit.Mvvm** — MVVM source generators (`[ObservableProperty]`, `[RelayCommand]`)
+- **Dapper + Microsoft.Data.Sqlite** — lightweight SQLite access via `.sql` query files in `Queries/`
+- **ViewLocator** — auto-resolves `*ViewModel` → `*View` for page navigation
+
+## Project Goals
+
+1. **Importable account statements** — parse CSV/OFX exports from banks into a unified Transaction list.
+2. **Rule-based auto-categorization** — on import, evaluate ranked rules (each with N conditions) to assign a BudgetCategory to each transaction.
+3. **Budget tracking** — define categories with optional targets and view actual vs. budgeted spending.
+4. **Spending analysis** — aggregate transactions by category across date ranges; support hierarchical budget categories.
+5. **Extensible importers** — importer factory pattern so new bank formats can be added without changing core logic.
+
+## Roadmap / Tasks
+
+### Phase 1 — Foundation (current)
+- [x] Project scaffold: Avalonia + MVVM + Dapper/SQLite
+- [x] MainWindow with menu bar (File / Edit / Navigate / Import) and toolbar
+- [x] Page-based navigation shell (Transactions, Accounts, Budget, Spending, Rules)
+- [x] SQLite schema (`Queries/setup_schema.sql`)
+- [ ] `FileNewCommand` — create empty SQLite DB and run setup_schema.sql
+- [ ] `FileOpenCommand` — open existing `.db` file via dialog, set connection string
+- [ ] `FileSaveCommand` — flush / close current connection cleanly
+
+### Phase 2 — Accounts & Import
+- [ ] Accounts page: list, add, edit, delete accounts
+- [ ] Importer factory + CSV importer (column-mapped, configurable sign convention)
+- [ ] Import Statement dialog: choose account, choose file, preview rows, confirm import
+- [ ] Duplicate detection on import (hash: Date|Name|Amount)
+
+### Phase 3 — Rules Engine
+- [ ] Rules page: create/edit/delete rules with ranked ordering
+- [ ] Condition editor: TransactionProperty + Conditional + Value (string or numeric)
+- [ ] Rule runner: on import and on-demand, evaluate rules in rank order and assign BudgetCategory
+- [ ] `UserAdjustedCategory` flag — prevents rule re-run from overwriting manual overrides
+
+### Phase 4 — Transactions & Budget
+- [ ] Transactions page: filterable/sortable grid with inline category editing
+- [ ] Budget page: category tree with BudgetTarget vs. actual spend columns
+- [ ] Spending page: date-range spending summary by category hierarchy
 
 ## Data Model
-Sign Convention: minus sign is an expense, positive sign is income.
 
-Transaction: (unique ID based on Date-Name-Amount) V1
-- Date
-- Name (as imported, not editable in UI)
-- Description (empty, user editable)
-- Amount 
-- BudgeCategory
-- UserAdjustedCategory (excludes from rerun of rules)
-- Account
+Sign convention: **negative amount = expense, positive = income**.
 
-Account: V1
-- Name (primary key) 
-- IsMinusSignAnExpense (used on import file)
-- ImporterType
+### Transaction (V1)
+| Column | Type | Notes |
+|---|---|---|
+| Id | TEXT PK | Composite key: `Date\|Name\|Amount` |
+| Date | TEXT | ISO-8601 |
+| Name | TEXT | As imported — not user-editable |
+| Description | TEXT | User-editable notes |
+| Amount | REAL | Negative = expense |
+| BudgetCategoryName | TEXT FK | Assigned by rules |
+| UserAdjustedCategoryName | TEXT FK | Set manually; blocks rule re-run |
+| AccountName | TEXT FK | |
 
-BudgetCategory: V1
-- Name (Primary key)
-- Parent (Nullable)
-- IsExcludedFromSpendingTotal
+### Account (V1)
+| Column | Type | Notes |
+|---|---|---|
+| Name | TEXT PK | |
+| IsMinusSignAnExpense | INTEGER | Import sign convention |
+| ImporterType | TEXT | Key into importer factory |
 
-Rule: V1
-- Name
-- Rank
-- List of Condition
-- BudgetCategory
-- RuleCategory
+### BudgetCategory (V1)
+| Column | Type | Notes |
+|---|---|---|
+| Name | TEXT PK | |
+| Parent | TEXT FK NULL | Self-referential hierarchy |
+| IsExcludedFromSpendingTotal | INTEGER | e.g. transfers |
+| BudgetTarget | REAL NULL | Monthly target |
 
-Condition: V1
-- GUID
-- IsStringProperty
-- TransactionProperty
-- Conditional
-- Value
+### Rule (V1)
+| Column | Type | Notes |
+|---|---|---|
+| Id | TEXT PK | GUID |
+| Name | TEXT | |
+| Rank | INTEGER | Lower = higher priority |
+| BudgetCategoryName | TEXT FK NULL | Category to assign |
+| RuleCategoryId | TEXT FK NULL | Logical grouping |
 
-RuleCategory: V1
-- ParentRuleCategory (NULL allowed)
-- Name
+### Condition (V1)
+| Column | Type | Notes |
+|---|---|---|
+| Id | TEXT PK | GUID |
+| RuleId | TEXT FK | Parent rule |
+| IsStringProperty | INTEGER | 1 = string comparison |
+| TransactionProperty | TEXT | `Name`, `Amount`, `Date`, etc. |
+| Conditional | TEXT | `Contains`, `Equals`, `GreaterThan`, etc. |
+| Value | TEXT | Comparison value |
 
-TableVersions: 
-Property of Table name and int for  current version.
-Previous table version stored in [[OldModel]].md
-one row
-If version gets updated, can migrate to new table version and update this record. 
+### RuleCategory (V1)
+| Column | Type | Notes |
+|---|---|---|
+| Id | TEXT PK | GUID |
+| Name | TEXT | |
+| ParentRuleCategoryId | TEXT FK NULL | Self-referential |
+
+### TableVersions
+One row per table (`TableName`, `Version`). Increment `Version` when the schema changes and run a migration.
+
+## Previous Model Notes
+
+See `OldModel.md` for superseded schema versions.

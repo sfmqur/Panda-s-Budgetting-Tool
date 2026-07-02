@@ -3,18 +3,72 @@
         xmlns:vm="using:PandasBudgettingTool.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="700"
         x:Class="PandasBudgettingTool.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
-        Title="PandasBudgettingTool">
+        Title="Panda's Budgeting Tool"
+        MinWidth="800" MinHeight="500">
 
     <Design.DataContext>
-        <!-- This only sets the DataContext for the previewer in an IDE,
-             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
         <vm:MainWindowViewModel/>
     </Design.DataContext>
 
-    <TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+    <DockPanel>
 
+        <!-- Menu Bar -->
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="_File">
+                <MenuItem Header="_New Database..."  Command="{Binding FileNewCommand}"/>
+                <MenuItem Header="_Open Database..." Command="{Binding FileOpenCommand}"/>
+                <MenuItem Header="_Save"             Command="{Binding FileSaveCommand}"/>
+                <Separator/>
+                <MenuItem Header="E_xit"             Command="{Binding ExitCommand}"/>
+            </MenuItem>
+
+            <MenuItem Header="_Edit">
+            </MenuItem>
+
+            <MenuItem Header="_Navigate">
+                <MenuItem Header="_Transactions" Command="{Binding NavigateToTransactionsCommand}"/>
+                <MenuItem Header="_Accounts"     Command="{Binding NavigateToAccountsCommand}"/>
+                <MenuItem Header="_Budget"       Command="{Binding NavigateToBudgetCommand}"/>
+                <MenuItem Header="_Spending"     Command="{Binding NavigateToSpendingCommand}"/>
+                <MenuItem Header="_Rules"        Command="{Binding NavigateToRulesCommand}"/>
+                <Separator/>
+                <MenuItem Header="Go _Back"    Command="{Binding NavigateBackCommand}"/>
+                <MenuItem Header="Go _Forward" Command="{Binding NavigateForwardCommand}"/>
+            </MenuItem>
+
+            <MenuItem Header="_Import">
+                <MenuItem Header="Import Account _Statement..." Command="{Binding ImportStatementCommand}"/>
+            </MenuItem>
+        </Menu>
+
+        <!-- Toolbar -->
+        <Border DockPanel.Dock="Top"
+                BorderBrush="{DynamicResource SystemControlForegroundBaseMediumLowBrush}"
+                BorderThickness="0,0,0,1"
+                Padding="4,2">
+            <StackPanel Orientation="Horizontal" Spacing="2">
+                <Button Command="{Binding NavigateBackCommand}"    ToolTip.Tip="Go Back"    Padding="8,4">◀</Button>
+                <Button Command="{Binding NavigateForwardCommand}" ToolTip.Tip="Go Forward" Padding="8,4">▶</Button>
+                <Rectangle Width="1" Margin="4,2"
+                           Fill="{DynamicResource SystemControlForegroundBaseMediumLowBrush}"/>
+                <Button Command="{Binding FileSaveCommand}" ToolTip.Tip="Save"          Padding="8,4">Save</Button>
+                <Button Command="{Binding FileOpenCommand}" ToolTip.Tip="Open Database" Padding="8,4">Open</Button>
+                <Rectangle Width="1" Margin="4,2"
+                           Fill="{DynamicResource SystemControlForegroundBaseMediumLowBrush}"/>
+                <Button Command="{Binding NavigateToTransactionsCommand}" Padding="8,4">Transactions</Button>
+                <Button Command="{Binding NavigateToAccountsCommand}"     Padding="8,4">Accounts</Button>
+                <Button Command="{Binding NavigateToBudgetCommand}"       Padding="8,4">Budget</Button>
+                <Button Command="{Binding NavigateToSpendingCommand}"     Padding="8,4">Spending</Button>
+                <Button Command="{Binding NavigateToRulesCommand}"        Padding="8,4">Rules</Button>
+            </StackPanel>
+        </Border>
+
+        <!-- Page Content -->
+        <ContentControl Content="{Binding CurrentPage}"/>
+
+    </DockPanel>
 </Window>
