@@ -6,5 +6,6 @@ public partial class SpendingView : UserControl
 {
     public SpendingView()
     {
+        InitializeComponent();
     }
 }

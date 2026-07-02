@@ -6,5 +6,6 @@ public partial class RulesView : UserControl
 {
     public RulesView()
     {
+        InitializeComponent();
     }
 }
