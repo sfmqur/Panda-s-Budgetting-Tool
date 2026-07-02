@@ -50,15 +50,15 @@ A desktop budgeting tool that auto-imports account statements, categorizes trans
 Sign convention: **negative amount = expense, positive = income**.
 
 ### Transaction (V1)
-| Column | Type | Notes |
-|---|---|---|
+| Column | Type    | Notes |
+|---|---------|---|
 | Id | TEXT PK | Composite key: `Date\|Name\|Amount` |
-| Date | TEXT | ISO-8601 |
-| Name | TEXT | As imported — not user-editable |
-| Description | TEXT | User-editable notes |
-| Amount | REAL | Negative = expense |
+| Date | TEXT    | ISO-8601 YYYY-MM-DD|
+| Name | TEXT    | As imported — not user-editable |
+| Description | TEXT    | User-editable notes |
+| Amount | REAL    | Negative = expense |
 | BudgetCategoryName | TEXT FK | Assigned by rules |
-| UserAdjustedCategoryName | TEXT FK | Set manually; blocks rule re-run |
+| UserAdjustedCategory | INTEGER | 1 = userAdjusted (skip rule re-run), 0 = automatic |
 | AccountName | TEXT FK | |
 
 ### Account (V1)
@@ -77,30 +77,28 @@ Sign convention: **negative amount = expense, positive = income**.
 | BudgetTarget | REAL NULL | Monthly target |
 
 ### Rule (V1)
-| Column | Type | Notes |
-|---|---|---|
-| Id | TEXT PK | GUID |
-| Name | TEXT | |
-| Rank | INTEGER | Lower = higher priority |
+| Column | Type         | Notes |
+|---|--------------|---|
+| Name | TEXT PK      | |
+| Rank | INTEGER      | Lower = higher priority |
 | BudgetCategoryName | TEXT FK NULL | Category to assign |
-| RuleCategoryId | TEXT FK NULL | Logical grouping |
+| RuleCategoryName | TEXT FK NULL | Logical grouping |
 
 ### Condition (V1)
 | Column | Type | Notes |
 |---|---|---|
 | Id | TEXT PK | GUID |
-| RuleId | TEXT FK | Parent rule |
+| RuleName | TEXT FK | Parent Rule.Name |
 | IsStringProperty | INTEGER | 1 = string comparison |
 | TransactionProperty | TEXT | `Name`, `Amount`, `Date`, etc. |
 | Conditional | TEXT | `Contains`, `Equals`, `GreaterThan`, etc. |
 | Value | TEXT | Comparison value |
 
 ### RuleCategory (V1)
-| Column | Type | Notes |
-|---|---|---|
-| Id | TEXT PK | GUID |
-| Name | TEXT | |
-| ParentRuleCategoryId | TEXT FK NULL | Self-referential |
+| Column | Type         | Notes |
+|---|--------------|---|
+| Name | TEXT PK      | |
+| ParentRuleCategoryName | TEXT FK NULL | Self-referential |
 
 ### TableVersions
 One row per table (`TableName`, `Version`). Increment `Version` when the schema changes and run a migration.

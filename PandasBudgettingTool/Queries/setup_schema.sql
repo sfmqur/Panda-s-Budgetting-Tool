@@ -24,22 +24,20 @@ CREATE TABLE IF NOT EXISTS BudgetCategory (
 );
 
 CREATE TABLE IF NOT EXISTS RuleCategory (
-    Id                   TEXT NOT NULL PRIMARY KEY,   -- GUID
-    Name                 TEXT NOT NULL,
-    ParentRuleCategoryId TEXT NULL REFERENCES RuleCategory(Id) ON DELETE SET NULL
+    Name                     TEXT NOT NULL PRIMARY KEY,
+    ParentRuleCategoryName   TEXT NULL REFERENCES RuleCategory(Name) ON DELETE SET NULL
 );
 
 CREATE TABLE IF NOT EXISTS Rule (
-    Id                 TEXT NOT NULL PRIMARY KEY,   -- GUID
-    Name               TEXT NOT NULL,
+    Name               TEXT NOT NULL PRIMARY KEY,
     Rank               INTEGER NOT NULL DEFAULT 0,
     BudgetCategoryName TEXT NULL REFERENCES BudgetCategory(Name) ON DELETE SET NULL,
-    RuleCategoryId     TEXT NULL REFERENCES RuleCategory(Id) ON DELETE SET NULL
+    RuleCategoryName   TEXT NULL REFERENCES RuleCategory(Name) ON DELETE SET NULL
 );
 
 CREATE TABLE IF NOT EXISTS Condition (
     Id                  TEXT NOT NULL PRIMARY KEY,   -- GUID
-    RuleId              TEXT NOT NULL REFERENCES Rule(Id) ON DELETE CASCADE,
+    RuleName            TEXT NOT NULL REFERENCES Rule(Name) ON DELETE CASCADE,
     IsStringProperty    INTEGER NOT NULL DEFAULT 1,  -- 1 = string, 0 = numeric
     TransactionProperty TEXT NOT NULL,               -- e.g. "Name", "Amount", "Date"
     Conditional         TEXT NOT NULL,               -- e.g. "Contains", "Equals", "GreaterThan"
@@ -53,7 +51,7 @@ CREATE TABLE IF NOT EXISTS [Transaction] (
     Description            TEXT NOT NULL DEFAULT '',
     Amount                 REAL NOT NULL,
     BudgetCategoryName     TEXT NULL REFERENCES BudgetCategory(Name) ON DELETE SET NULL,
-    UserAdjustedCategoryName TEXT NULL REFERENCES BudgetCategory(Name) ON DELETE SET NULL,
+    UserAdjustedCategory   INTEGER NOT NULL DEFAULT 0, -- 1 = userAdjusted, 0 = automatic
     AccountName            TEXT NULL REFERENCES Account(Name) ON DELETE SET NULL
 );
 
