@@ -1,9 +1,7 @@
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
-using Avalonia.Data.Core;
-using Avalonia.Data.Core.Plugins;
-using System.Linq;
 using Avalonia.Markup.Xaml;
+using PandasBudgettingTool.Services;
 using PandasBudgettingTool.ViewModels;
 using PandasBudgettingTool.Views;
 
@@ -11,21 +9,30 @@ namespace PandasBudgettingTool;
 
 public partial class App : Application
 {
-  public override void Initialize()
-  {
-    AvaloniaXamlLoader.Load(this);
-  }
-
-  public override void OnFrameworkInitializationCompleted()
-  {
-    if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+    public override void Initialize()
     {
-      desktop.MainWindow = new MainWindow
-      {
-        DataContext = new MainWindowViewModel(),
-      };
+        AvaloniaXamlLoader.Load(this);
     }
 
-    base.OnFrameworkInitializationCompleted();
-  }
+    public override async void OnFrameworkInitializationCompleted()
+    {
+        if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+        {
+            var configService  = new ConfigService();
+            var databaseService = new DatabaseService();
+            var dialogService  = new DialogService();
+
+            var vm = new MainWindowViewModel(configService, databaseService, dialogService);
+
+            desktop.MainWindow = new MainWindow { DataContext = vm };
+
+            base.OnFrameworkInitializationCompleted();
+
+            await vm.InitializeAsync();
+        }
+        else
+        {
+            base.OnFrameworkInitializationCompleted();
+        }
+    }
 }
