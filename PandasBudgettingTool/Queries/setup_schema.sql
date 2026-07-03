@@ -35,6 +35,8 @@ CREATE TABLE IF NOT EXISTS Rule (
     RuleCategoryName   TEXT NULL REFERENCES RuleCategory(Name) ON DELETE SET NULL
 );
 
+-- One Rule has many Conditions (1:N via Condition.RuleName FK).
+-- All Conditions on a Rule must match for the Rule to fire.
 CREATE TABLE IF NOT EXISTS Condition (
     Id                  TEXT NOT NULL PRIMARY KEY,   -- GUID
     RuleName            TEXT NOT NULL REFERENCES Rule(Name) ON DELETE CASCADE,
@@ -43,6 +45,9 @@ CREATE TABLE IF NOT EXISTS Condition (
     Conditional         TEXT NOT NULL,               -- e.g. "Contains", "Equals", "GreaterThan"
     Value               TEXT NOT NULL
 );
+
+-- Index supports efficient lookup of all Conditions for a given Rule
+CREATE INDEX IF NOT EXISTS idx_Condition_RuleName ON Condition(RuleName);
 
 CREATE TABLE IF NOT EXISTS [Transaction] (
     Id                     TEXT NOT NULL PRIMARY KEY,  -- composite: Date|Name|Amount

@@ -77,22 +77,25 @@ Sign convention: **negative amount = expense, positive = income**.
 | BudgetTarget | REAL NULL | Monthly target |
 
 ### Rule (V1)
-| Column | Type         | Notes |
-|---|--------------|---|
-| Name | TEXT PK      | |
-| Rank | INTEGER      | Lower = higher priority |
-| BudgetCategoryName | TEXT FK NULL | Category to assign |
+One Rule has many Conditions (1:N). All Conditions must match for the Rule to fire.
+
+| Column | Type | Notes |
+|---|---|---|
+| Name | TEXT PK | |
+| Rank | INTEGER | Lower = higher priority |
+| BudgetCategoryName | TEXT FK NULL | Category to assign on match |
 | RuleCategoryName | TEXT FK NULL | Logical grouping |
+| *(Conditions)* | *1:N nav* | Loaded from Condition table via RuleName FK |
 
 ### Condition (V1)
 | Column | Type | Notes |
 |---|---|---|
-| Id | TEXT PK | GUID |
-| RuleName | TEXT FK | Parent Rule.Name |
-| IsStringProperty | INTEGER | 1 = string comparison |
+| Id | TEXT PK | GUID (`Guid.NewGuid().ToString()`) |
+| RuleName | TEXT FK | Parent Rule.Name — cascades on delete |
+| IsStringProperty | INTEGER | 1 = string comparison, 0 = numeric |
 | TransactionProperty | TEXT | `Name`, `Amount`, `Date`, etc. |
 | Conditional | TEXT | `Contains`, `Equals`, `GreaterThan`, etc. |
-| Value | TEXT | Comparison value |
+| Value | TEXT | Comparison value (always stored as text) |
 
 ### RuleCategory (V1)
 | Column | Type         | Notes |
