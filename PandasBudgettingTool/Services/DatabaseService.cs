@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using Dapper;
 using Microsoft.Data.Sqlite;
 
 namespace PandasBudgettingTool.Services;
@@ -12,12 +14,8 @@ public class DatabaseService : IDisposable
     public string? CurrentPath { get; private set; }
     public bool IsOpen => _connection is not null;
 
-    // ── Public API ───────────────────────────────────────────────────────────
+    // ── Open / create ────────────────────────────────────────────────────────
 
-    /// <summary>
-    /// Creates a new SQLite database at <paramref name="path"/>, runs setup_schema.sql,
-    /// and opens the connection.
-    /// </summary>
     public async Task CreateNewAsync(string path)
     {
         Close();
@@ -32,9 +30,6 @@ public class DatabaseService : IDisposable
         await ExecuteSchemaAsync();
     }
 
-    /// <summary>
-    /// Opens an existing SQLite database at <paramref name="path"/>.
-    /// </summary>
     public async Task OpenAsync(string path)
     {
         Close();
@@ -44,10 +39,38 @@ public class DatabaseService : IDisposable
         CurrentPath = path;
     }
 
+    public void Close()
+    {
+        _connection?.Close();
+        _connection?.Dispose();
+        _connection = null;
+        SqliteConnection.ClearAllPools();
+        CurrentPath = null;
+    }
+
+    public void Dispose() => Close();
+
+    // ── Dapper helpers ───────────────────────────────────────────────────────
+
     /// <summary>
-    /// Returns the open connection for use with Dapper.
-    /// Throws if no database is open.
+    /// Reads a .sql file from Queries/<paramref name="queryFile"/> and returns mapped rows.
     /// </summary>
+    public async Task<IEnumerable<T>> QueryAsync<T>(string queryFile, object? param = null)
+    {
+        var sql = await LoadSqlAsync(queryFile);
+        return await GetConnection().QueryAsync<T>(sql, param);
+    }
+
+    /// <summary>
+    /// Reads a .sql file from Queries/<paramref name="queryFile"/> and executes it.
+    /// </summary>
+    public async Task ExecuteQueryAsync(string queryFile, object? param = null)
+    {
+        var sql = await LoadSqlAsync(queryFile);
+        await GetConnection().ExecuteAsync(sql, param);
+    }
+
+    /// <summary>Returns the open connection for callers that need direct Dapper access.</summary>
     public SqliteConnection GetConnection()
     {
         if (_connection is null)
@@ -55,23 +78,10 @@ public class DatabaseService : IDisposable
         return _connection;
     }
 
-    public void Close()
-    {
-        _connection?.Close();
-        _connection?.Dispose();
-        _connection = null;
-        // Release any pooled file handles so the file can be moved/deleted
-        SqliteConnection.ClearAllPools();
-        CurrentPath = null;
-    }
-
-    public void Dispose() => Close();
-
     // ── Private helpers ──────────────────────────────────────────────────────
 
     private static SqliteConnection BuildConnection(string path)
     {
-        // Foreign Keys=True enforces FK constraints at the driver level
         var cs = new SqliteConnectionStringBuilder
         {
             DataSource = path,
@@ -89,5 +99,11 @@ public class DatabaseService : IDisposable
         using var cmd = _connection!.CreateCommand();
         cmd.CommandText = sql;
         await cmd.ExecuteNonQueryAsync();
+    }
+
+    private static Task<string> LoadSqlAsync(string queryFile)
+    {
+        var fullPath = Path.Combine(AppContext.BaseDirectory, "Queries", queryFile);
+        return File.ReadAllTextAsync(fullPath);
     }
 }

@@ -1,0 +1,31 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:PandasBudgettingTool.ViewModels"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="320"
+             x:Class="PandasBudgettingTool.Views.CreateRuleCategoryView"
+             x:DataType="vm:CreateRuleCategoryViewModel">
+
+    <ScrollViewer>
+        <StackPanel Margin="24" Spacing="8" MaxWidth="480" HorizontalAlignment="Left">
+
+            <TextBlock Text="Create Rule Category" FontSize="20" FontWeight="SemiBold" Margin="0,0,0,12"/>
+
+            <TextBlock Text="Name *"/>
+            <TextBox Text="{Binding Name}" Watermark="Rule category name"/>
+
+            <TextBlock Text="Parent Rule Category (optional)" Margin="0,4,0,0"/>
+            <ComboBox ItemsSource="{Binding ExistingCategories}"
+                      SelectedItem="{Binding SelectedParentRuleCategoryName}"
+                      PlaceholderText="— None —"
+                      HorizontalAlignment="Stretch"/>
+
+            <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,20,0,0">
+                <Button Content="Create" Command="{Binding CreateCommand}" Width="80"/>
+                <Button Content="Clear"  Command="{Binding ClearCommand}"  Width="80"/>
+            </StackPanel>
+
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

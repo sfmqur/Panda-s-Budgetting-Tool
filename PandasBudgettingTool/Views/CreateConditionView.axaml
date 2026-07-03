@@ -1,0 +1,47 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:PandasBudgettingTool.ViewModels"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="520"
+             x:Class="PandasBudgettingTool.Views.CreateConditionView"
+             x:DataType="vm:CreateConditionViewModel">
+
+    <ScrollViewer>
+        <StackPanel Margin="24" Spacing="8" MaxWidth="480" HorizontalAlignment="Left">
+
+            <TextBlock Text="Create Condition" FontSize="20" FontWeight="SemiBold" Margin="0,0,0,12"/>
+
+            <TextBlock Text="Rule *"/>
+            <ComboBox ItemsSource="{Binding RuleNames}"
+                      SelectedItem="{Binding SelectedRuleName}"
+                      PlaceholderText="Select a rule…"
+                      HorizontalAlignment="Stretch"/>
+
+            <TextBlock Text="Transaction Property *" Margin="0,4,0,0"/>
+            <ComboBox ItemsSource="{Binding TransactionProperties}"
+                      SelectedItem="{Binding SelectedTransactionProperty}"
+                      PlaceholderText="Select property…"
+                      HorizontalAlignment="Stretch"/>
+
+            <CheckBox IsChecked="{Binding IsStringProperty}"
+                      Content="String comparison (uncheck for numeric)"
+                      Margin="0,4,0,0"/>
+
+            <TextBlock Text="Condition *" Margin="0,4,0,0"/>
+            <ComboBox ItemsSource="{Binding ConditionalOptions}"
+                      SelectedItem="{Binding SelectedConditional}"
+                      PlaceholderText="Select operator…"
+                      HorizontalAlignment="Stretch"/>
+
+            <TextBlock Text="Value *" Margin="0,4,0,0"/>
+            <TextBox Text="{Binding Value}" Watermark="Comparison value"/>
+
+            <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,20,0,0">
+                <Button Content="Create" Command="{Binding CreateCommand}" Width="80"/>
+                <Button Content="Clear"  Command="{Binding ClearCommand}"  Width="80"/>
+            </StackPanel>
+
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

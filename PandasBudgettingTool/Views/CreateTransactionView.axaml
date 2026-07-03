@@ -1,0 +1,53 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:PandasBudgettingTool.ViewModels"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="600"
+             x:Class="PandasBudgettingTool.Views.CreateTransactionView"
+             x:DataType="vm:CreateTransactionViewModel">
+
+    <ScrollViewer>
+        <StackPanel Margin="24" Spacing="8" MaxWidth="480" HorizontalAlignment="Left">
+
+            <TextBlock Text="Create Transaction" FontSize="20" FontWeight="SemiBold" Margin="0,0,0,12"/>
+
+            <TextBlock Text="Date"/>
+            <CalendarDatePicker SelectedDate="{Binding Date}"
+                                HorizontalAlignment="Stretch"/>
+
+            <TextBlock Text="Name *" Margin="0,4,0,0"/>
+            <TextBox Text="{Binding Name}" Watermark="As it appears on the statement"/>
+
+            <TextBlock Text="Description" Margin="0,4,0,0"/>
+            <TextBox Text="{Binding Description}" Watermark="Optional note"/>
+
+            <TextBlock Text="Amount * (negative = expense)" Margin="0,4,0,0"/>
+            <NumericUpDown Value="{Binding Amount}"
+                           FormatString="F2"
+                           Increment="0.01"/>
+
+            <TextBlock Text="Budget Category (optional)" Margin="0,4,0,0"/>
+            <ComboBox ItemsSource="{Binding BudgetCategoryNames}"
+                      SelectedItem="{Binding SelectedBudgetCategoryName}"
+                      PlaceholderText="— None —"
+                      HorizontalAlignment="Stretch"/>
+
+            <TextBlock Text="Account (optional)" Margin="0,4,0,0"/>
+            <ComboBox ItemsSource="{Binding AccountNames}"
+                      SelectedItem="{Binding SelectedAccountName}"
+                      PlaceholderText="— None —"
+                      HorizontalAlignment="Stretch"/>
+
+            <CheckBox IsChecked="{Binding UserAdjustedCategory}"
+                      Content="Mark as manually categorized (prevents rule re-run)"
+                      Margin="0,4,0,0"/>
+
+            <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,20,0,0">
+                <Button Content="Create" Command="{Binding CreateCommand}" Width="80"/>
+                <Button Content="Clear"  Command="{Binding ClearCommand}"  Width="80"/>
+            </StackPanel>
+
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

@@ -32,4 +32,10 @@
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
     </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="Views\CreateAccountView.axaml.cs">
+        <DependentUpon>CreateAccountView.axaml</DependentUpon>
+      </Compile>
+    </ItemGroup>
 </Project>

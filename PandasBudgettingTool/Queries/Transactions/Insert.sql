@@ -1,0 +1,2 @@
+INSERT INTO [Transaction] (Id, Date, Name, Description, Amount, BudgetCategoryName, UserAdjustedCategory, AccountName)
+VALUES (@Id, @Date, @Name, @Description, @Amount, @BudgetCategoryName, @UserAdjustedCategory, @AccountName);

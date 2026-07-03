@@ -12,19 +12,27 @@ namespace PandasBudgettingTool.ViewModels;
 
 public partial class MainWindowViewModel : ViewModelBase
 {
-    private readonly ConfigService _configService;
+    private readonly ConfigService   _configService;
     private readonly DatabaseService _databaseService;
-    private readonly DialogService _dialogService;
+    private readonly DialogService   _dialogService;
 
     private readonly Stack<ViewModelBase> _backStack    = new();
     private readonly Stack<ViewModelBase> _forwardStack = new();
 
-    // Cached page instances so state is preserved across navigation
+    // ── Cached view pages ────────────────────────────────────────────────────
     private TransactionsViewModel? _transactionsVm;
     private AccountsViewModel?     _accountsVm;
     private BudgetViewModel?       _budgetVm;
     private SpendingViewModel?     _spendingVm;
     private RulesViewModel?        _rulesVm;
+
+    // ── Cached create pages ──────────────────────────────────────────────────
+    private CreateTransactionViewModel?  _createTransactionVm;
+    private CreateAccountViewModel?      _createAccountVm;
+    private CreateBudgetCategoryViewModel? _createBudgetCategoryVm;
+    private CreateRuleViewModel?         _createRuleVm;
+    private CreateRuleCategoryViewModel? _createRuleCategoryVm;
+    private CreateConditionViewModel?    _createConditionVm;
 
     // Design-time constructor
     public MainWindowViewModel()
@@ -108,7 +116,7 @@ public partial class MainWindowViewModel : ViewModelBase
             ?.Shutdown();
     }
 
-    // ── Navigation ───────────────────────────────────────────────────────────
+    // ── View Navigation ──────────────────────────────────────────────────────
 
     [RelayCommand(CanExecute = nameof(CanNavigateBack))]
     private void NavigateBack()
@@ -147,6 +155,56 @@ public partial class MainWindowViewModel : ViewModelBase
     [RelayCommand]
     private void NavigateToRules() =>
         NavigateTo(_rulesVm ??= new RulesViewModel());
+
+    // ── Create Navigation ─────────────────────────────────────────────────────
+
+    [RelayCommand]
+    private async Task NavigateToCreateTransaction()
+    {
+        _createTransactionVm ??= new CreateTransactionViewModel(_databaseService);
+        await _createTransactionVm.LoadOptionsAsync();
+        NavigateTo(_createTransactionVm);
+    }
+
+    [RelayCommand]
+    private async Task NavigateToCreateAccount()
+    {
+        _createAccountVm ??= new CreateAccountViewModel(_databaseService);
+        NavigateTo(_createAccountVm);
+        await Task.CompletedTask;
+    }
+
+    [RelayCommand]
+    private async Task NavigateToCreateBudgetCategory()
+    {
+        _createBudgetCategoryVm ??= new CreateBudgetCategoryViewModel(_databaseService);
+        await _createBudgetCategoryVm.LoadOptionsAsync();
+        NavigateTo(_createBudgetCategoryVm);
+    }
+
+    [RelayCommand]
+    private async Task NavigateToCreateRule()
+    {
+        _createRuleVm ??= new CreateRuleViewModel(_databaseService);
+        await _createRuleVm.LoadOptionsAsync();
+        NavigateTo(_createRuleVm);
+    }
+
+    [RelayCommand]
+    private async Task NavigateToCreateRuleCategory()
+    {
+        _createRuleCategoryVm ??= new CreateRuleCategoryViewModel(_databaseService);
+        await _createRuleCategoryVm.LoadOptionsAsync();
+        NavigateTo(_createRuleCategoryVm);
+    }
+
+    [RelayCommand]
+    private async Task NavigateToCreateCondition()
+    {
+        _createConditionVm ??= new CreateConditionViewModel(_databaseService);
+        await _createConditionVm.LoadOptionsAsync();
+        NavigateTo(_createConditionVm);
+    }
 
     // ── Import Menu ──────────────────────────────────────────────────────────
 

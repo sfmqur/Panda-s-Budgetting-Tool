@@ -29,6 +29,15 @@
             <MenuItem Header="_Edit">
             </MenuItem>
 
+            <MenuItem Header="_Create">
+                <MenuItem Header="_Transaction"     Command="{Binding NavigateToCreateTransactionCommand}"/>
+                <MenuItem Header="_Account"         Command="{Binding NavigateToCreateAccountCommand}"/>
+                <MenuItem Header="_Budget Category" Command="{Binding NavigateToCreateBudgetCategoryCommand}"/>
+                <MenuItem Header="_Rule"            Command="{Binding NavigateToCreateRuleCommand}"/>
+                <MenuItem Header="Rule _Category"   Command="{Binding NavigateToCreateRuleCategoryCommand}"/>
+                <MenuItem Header="C_ondition"       Command="{Binding NavigateToCreateConditionCommand}"/>
+            </MenuItem>
+
             <MenuItem Header="_Navigate">
                 <MenuItem Header="_Transactions" Command="{Binding NavigateToTransactionsCommand}"/>
                 <MenuItem Header="_Accounts"     Command="{Binding NavigateToAccountsCommand}"/>
