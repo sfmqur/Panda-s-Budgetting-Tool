@@ -26,7 +26,8 @@
                     <TextBox Text="{Binding Name}" Width="180" VerticalAlignment="Center"/>
 
                     <TextBlock Text="Rank:" VerticalAlignment="Center"/>
-                    <NumericUpDown Value="{Binding Rank}" Width="100" FormatString="0"/>
+                    <NumericUpDown Value="{Binding Rank}" Width="100" FormatString="0" 
+                                   Minimum="0" Increment="1"/>
 
                     <TextBlock Text="Budget Category:" VerticalAlignment="Center"/>
                     <ComboBox ItemsSource="{Binding BudgetCategoryOptions}"
