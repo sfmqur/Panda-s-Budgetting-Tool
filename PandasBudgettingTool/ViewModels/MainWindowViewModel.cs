@@ -36,6 +36,7 @@ public partial class MainWindowViewModel : ViewModelBase
     private CreateRuleViewModel?         _createRuleVm;
     private CreateRuleCategoryViewModel? _createRuleCategoryVm;
     private CreateConditionViewModel?    _createConditionVm;
+    private ImportStatementViewModel?    _importStatementVm;
 
     // Design-time constructor
     public MainWindowViewModel()
@@ -161,9 +162,21 @@ public partial class MainWindowViewModel : ViewModelBase
     [RelayCommand]
     private async Task NavigateToAccounts()
     {
-        _accountsVm ??= new AccountsViewModel(_databaseService);
+        if (_accountsVm is null)
+        {
+            _accountsVm = new AccountsViewModel(_databaseService);
+            _accountsVm.OpenTransactionsForAccountRequested += OnOpenTransactionsForAccountRequested;
+        }
+
         NavigateTo(_accountsVm);
         await _accountsVm.RefreshAsync();
+    }
+
+    private async void OnOpenTransactionsForAccountRequested(string accountName)
+    {
+        _transactionsVm ??= new TransactionsViewModel(_databaseService);
+        NavigateTo(_transactionsVm);
+        await _transactionsVm.FilterToAccountAsync(accountName);
     }
 
     [RelayCommand]
@@ -272,7 +285,12 @@ public partial class MainWindowViewModel : ViewModelBase
     // ── Import Menu ──────────────────────────────────────────────────────────
 
     [RelayCommand]
-    private Task ImportStatement() => Task.CompletedTask;
+    private async Task ImportStatement()
+    {
+        _importStatementVm ??= new ImportStatementViewModel(_databaseService, _dialogService);
+        NavigateTo(_importStatementVm);
+        await _importStatementVm.RefreshAsync();
+    }
 
     // ── Private helpers ──────────────────────────────────────────────────────
 

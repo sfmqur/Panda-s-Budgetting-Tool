@@ -18,6 +18,11 @@
                     <CalendarDatePicker SelectedDate="{Binding FromDate}" Width="140"/>
                     <TextBlock Text="To:" VerticalAlignment="Center"/>
                     <CalendarDatePicker SelectedDate="{Binding ToDate}" Width="140"/>
+                    <TextBlock Text="Budget Category:" VerticalAlignment="Center" Margin="16,0,0,0"/>
+                    <ComboBox ItemsSource="{Binding BudgetCategoryFilterOptions}"
+                              SelectedItem="{Binding SelectedBudgetCategoryFilter}"
+                              MinWidth="160"/>
+
                     <Button Content="Apply Filter"
                             Command="{Binding ApplyFilterCommand}"
                             VerticalAlignment="Center"/>

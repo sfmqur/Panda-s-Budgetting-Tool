@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
@@ -13,6 +14,12 @@ public partial class AccountsViewModel : ViewModelBase
     public AccountsViewModel(DatabaseService db) => _db = db;
 
     public ObservableCollection<AccountRowViewModel> Accounts { get; } = [];
+
+    /// <summary>Raised when an account row's Transactions button is clicked — the argument is the Account's Name.</summary>
+    public event Action<string>? OpenTransactionsForAccountRequested;
+
+    public void RequestOpenTransactionsForAccount(string accountName) =>
+        OpenTransactionsForAccountRequested?.Invoke(accountName);
 
     public override async Task RefreshAsync()
     {

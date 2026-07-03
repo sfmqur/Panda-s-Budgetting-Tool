@@ -1,13 +1,14 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace PandasBudgettingTool.Models.Importing.Importers;
 
 public class WfCredCard : IImporter
 {
   public string HelpFileName { get; } = "WellsFargo.txt";
-  
-  public List<Transaction> Import(string filePath)
+  public async Task<List<Transaction>> ImportAsync(string filePath)
   {
-    throw new System.NotImplementedException();
+    await Task.Delay(5000);
+    return new List<Transaction>();
   }
 }

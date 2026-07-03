@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace PandasBudgettingTool.Models.Importing;
 
@@ -14,5 +15,5 @@ public interface IImporter
   /// </summary>
   /// <param name="filePath"></param>
   /// <returns></returns>
-  List<Transaction> Import(string filePath);
+  Task<List<Transaction>> ImportAsync(string filePath);
 }

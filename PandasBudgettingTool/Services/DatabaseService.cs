@@ -65,11 +65,11 @@ public class DatabaseService : IDisposable
         return await GetConnection().QueryAsync<T>(sql, param);
     }
 
-    /// <summary>Loads a .sql file from Queries/<paramref name="queryFile"/> and executes it.</summary>
-    public async Task ExecuteQueryAsync(string queryFile, object? param = null)
+    /// <summary>Loads a .sql file from Queries/<paramref name="queryFile"/>, executes it, and returns the affected row count.</summary>
+    public async Task<int> ExecuteQueryAsync(string queryFile, object? param = null)
     {
         var sql = await LoadSqlAsync(queryFile);
-        await GetConnection().ExecuteAsync(sql, param);
+        return await GetConnection().ExecuteAsync(sql, param);
     }
 
     /// <summary>Returns the open connection for callers that need direct Dapper access.</summary>

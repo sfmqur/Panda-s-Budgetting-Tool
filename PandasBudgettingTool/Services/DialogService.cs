@@ -14,6 +14,11 @@ public class DialogService
         Patterns = ["*.db", "*.sqlite", "*.sqlite3"]
     };
 
+    private static readonly FilePickerFileType StatementFileType = new("Statement Files")
+    {
+        Patterns = ["*.csv", "*.ofx", "*.qfx", "*.txt"]
+    };
+
     public async Task<string?> PickNewDatabaseFileAsync()
     {
         var provider = GetStorageProvider();
@@ -40,6 +45,21 @@ public class DialogService
             Title = "Open Budget Database",
             AllowMultiple = false,
             FileTypeFilter = [DbFileType]
+        });
+
+        return results.FirstOrDefault()?.Path.LocalPath;
+    }
+
+    public async Task<string?> PickTransactionFileAsync()
+    {
+        var provider = GetStorageProvider();
+        if (provider is null) return null;
+
+        var results = await provider.OpenFilePickerAsync(new FilePickerOpenOptions
+        {
+            Title = "Select Transaction Data",
+            AllowMultiple = false,
+            FileTypeFilter = [StatementFileType, FilePickerFileTypes.All]
         });
 
         return results.FirstOrDefault()?.Path.LocalPath;

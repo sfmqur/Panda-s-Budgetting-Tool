@@ -13,6 +13,9 @@ namespace PandasBudgettingTool.ViewModels;
 
 public partial class TransactionsViewModel : ViewModelBase
 {
+    public const string AllBudgetCategoriesFilter = "(All)";
+    private const string NoneBudgetCategoryFilter  = "(None)";
+
     private readonly DatabaseService _db;
 
     public TransactionsViewModel(DatabaseService db) => _db = db;
@@ -30,6 +33,11 @@ public partial class TransactionsViewModel : ViewModelBase
 
     public ObservableCollection<AccountFilterItem> AccountFilters { get; } = [];
 
+    public ObservableCollection<string> BudgetCategoryFilterOptions { get; } = [AllBudgetCategoriesFilter];
+
+    [ObservableProperty]
+    private string _selectedBudgetCategoryFilter = AllBudgetCategoriesFilter;
+
     // Shared dropdown option lists — row VMs hold references to these
     public ObservableCollection<string?> BudgetCategoryOptions { get; } = [null];
     public ObservableCollection<string?> AccountOptions        { get; } = [null];
@@ -44,6 +52,7 @@ public partial class TransactionsViewModel : ViewModelBase
     {
         await LoadAccountFiltersAsync();
         await LoadDropdownOptionsAsync();
+        await LoadBudgetCategoryFilterOptionsAsync();
         await LoadTransactionsAsync();
     }
 
@@ -57,6 +66,21 @@ public partial class TransactionsViewModel : ViewModelBase
 
     [RelayCommand]
     private async Task ApplyFilter() => await LoadTransactionsAsync();
+
+    /// <summary>Selects only the given account in the filter, sets the Budget Category filter to "All", and reloads.</summary>
+    public async Task FilterToAccountAsync(string accountName)
+    {
+        await LoadAccountFiltersAsync();
+        await LoadDropdownOptionsAsync();
+        await LoadBudgetCategoryFilterOptionsAsync();
+
+        foreach (var a in AccountFilters)
+            a.IsSelected = !a.IsNoAccount && a.Name == accountName;
+
+        SelectedBudgetCategoryFilter = AllBudgetCategoriesFilter;
+
+        await LoadTransactionsAsync();
+    }
 
     // ── Private helpers ───────────────────────────────────────────────────────
 
@@ -73,6 +97,23 @@ public partial class TransactionsViewModel : ViewModelBase
         AccountOptions.Add(null);
         foreach (var n in await _db.QueryAsync<string>("Accounts/GetAllNames.sql"))
             AccountOptions.Add(n);
+    }
+
+    private async Task LoadBudgetCategoryFilterOptionsAsync()
+    {
+        if (!_db.IsOpen) return;
+
+        var prevFilter = SelectedBudgetCategoryFilter;
+
+        BudgetCategoryFilterOptions.Clear();
+        BudgetCategoryFilterOptions.Add(AllBudgetCategoriesFilter);
+        BudgetCategoryFilterOptions.Add(NoneBudgetCategoryFilter);
+        foreach (var n in await _db.QueryAsync<string>("BudgetCategories/GetAllNames.sql"))
+            BudgetCategoryFilterOptions.Add(n);
+
+        SelectedBudgetCategoryFilter = BudgetCategoryFilterOptions.Contains(prevFilter)
+            ? prevFilter
+            : AllBudgetCategoriesFilter;
     }
 
     private async Task LoadAccountFiltersAsync()
@@ -120,13 +161,14 @@ public partial class TransactionsViewModel : ViewModelBase
             .FirstOrDefault(a => a.IsNoAccount)?.IsSelected ?? true;
 
         // Build WHERE clause dynamically because IN lists can't be static SQL
-        var sql = BuildTransactionQuery(selectedAccounts, includeNoAccount);
+        var sql = BuildTransactionQuery(selectedAccounts, includeNoAccount, SelectedBudgetCategoryFilter);
 
         var param = new
         {
-            FromDate     = fromDate,
-            ToDate       = toDate,
-            AccountNames = selectedAccounts
+            FromDate           = fromDate,
+            ToDate             = toDate,
+            AccountNames       = selectedAccounts,
+            BudgetCategoryName = SelectedBudgetCategoryFilter
         };
 
         var rows = await _db.QueryRawAsync<Transaction>(sql, param);
@@ -138,7 +180,8 @@ public partial class TransactionsViewModel : ViewModelBase
 
     private static string BuildTransactionQuery(
         IReadOnlyCollection<string> selectedAccounts,
-        bool includeNoAccount)
+        bool includeNoAccount,
+        string budgetCategoryFilter)
     {
         var sb = new StringBuilder(
             "SELECT * FROM [Transaction] WHERE Date >= @FromDate AND Date <= @ToDate");
@@ -149,6 +192,11 @@ public partial class TransactionsViewModel : ViewModelBase
 
         if (acctClauses.Count > 0)
             sb.Append($" AND ({string.Join(" OR ", acctClauses)})");
+
+        if (budgetCategoryFilter == NoneBudgetCategoryFilter)
+            sb.Append(" AND BudgetCategoryName IS NULL");
+        else if (budgetCategoryFilter != AllBudgetCategoriesFilter)
+            sb.Append(" AND BudgetCategoryName = @BudgetCategoryName");
 
         sb.Append(" ORDER BY Date DESC, Name");
         return sb.ToString();

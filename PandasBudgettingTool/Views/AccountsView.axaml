@@ -32,6 +32,14 @@
                     </DataTemplate>
                 </DataGridTemplateColumn.CellEditingTemplate>
             </DataGridTemplateColumn>
+
+            <DataGridTemplateColumn Header="" Width="120">
+                <DataGridTemplateColumn.CellTemplate>
+                    <DataTemplate>
+                        <Button Content="Transactions" Click="OnTransactionsClick"/>
+                    </DataTemplate>
+                </DataGridTemplateColumn.CellTemplate>
+            </DataGridTemplateColumn>
         </DataGrid.Columns>
 
     </DataGrid>
