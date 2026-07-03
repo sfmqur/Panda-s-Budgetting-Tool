@@ -37,5 +37,11 @@
       <Compile Update="Views\CreateAccountView.axaml.cs">
         <DependentUpon>CreateAccountView.axaml</DependentUpon>
       </Compile>
+      <Compile Update="Views\EditBudgetCategoriesView.axaml.cs">
+        <DependentUpon>EditBudgetCategoriesView.axaml</DependentUpon>
+      </Compile>
+      <Compile Update="Views\EditConditionsView.axaml.cs">
+        <DependentUpon>EditConditionsView.axaml</DependentUpon>
+      </Compile>
     </ItemGroup>
 </Project>

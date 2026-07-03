@@ -1,0 +1,54 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="PandasBudgettingTool.Views.EditRuleCategoriesView"
+             x:CompileBindings="False">
+
+    <DockPanel>
+
+        <!-- Filter panel -->
+        <Border DockPanel.Dock="Top"
+                BorderBrush="{DynamicResource SystemBaseLowColor}"
+                BorderThickness="0,0,0,1"
+                Padding="8,6">
+            <StackPanel Orientation="Horizontal" Spacing="8">
+                <TextBlock Text="Filter by Parent Rule Category:" VerticalAlignment="Center"/>
+                <ComboBox ItemsSource="{Binding ParentFilterOptions}"
+                          SelectedItem="{Binding SelectedParentFilter}"
+                          MinWidth="180"/>
+            </StackPanel>
+        </Border>
+
+    <DataGrid ItemsSource="{Binding Categories}"
+              AutoGenerateColumns="False"
+              CanUserResizeColumns="True"
+              GridLinesVisibility="Horizontal"
+              Margin="4">
+
+        <DataGrid.Columns>
+            <DataGridTextColumn Header="Name"
+                                Binding="{Binding Name}"
+                                IsReadOnly="True"
+                                Width="200" />
+
+            <DataGridTemplateColumn Header="Parent Rule Category" Width="*">
+                <DataGridTemplateColumn.CellTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding ParentRuleCategoryName}"
+                                   VerticalAlignment="Center" Margin="12,0"/>
+                    </DataTemplate>
+                </DataGridTemplateColumn.CellTemplate>
+                <DataGridTemplateColumn.CellEditingTemplate>
+                    <DataTemplate>
+                        <ComboBox ItemsSource="{Binding ParentOptions}"
+                                  SelectedItem="{Binding ParentRuleCategoryName}"
+                                  HorizontalAlignment="Stretch"/>
+                    </DataTemplate>
+                </DataGridTemplateColumn.CellEditingTemplate>
+            </DataGridTemplateColumn>
+        </DataGrid.Columns>
+
+    </DataGrid>
+
+    </DockPanel>
+
+</UserControl>

@@ -25,6 +25,9 @@ public partial class MainWindowViewModel : ViewModelBase
     private BudgetViewModel?       _budgetVm;
     private SpendingViewModel?     _spendingVm;
     private RulesViewModel?        _rulesVm;
+    private EditBudgetCategoriesViewModel? _editBudgetCategoriesVm;
+    private EditRuleCategoriesViewModel?   _editRuleCategoriesVm;
+    private EditConditionsViewModel?       _editConditionsVm;
 
     // ── Cached create pages ──────────────────────────────────────────────────
     private CreateTransactionViewModel?  _createTransactionVm;
@@ -161,6 +164,30 @@ public partial class MainWindowViewModel : ViewModelBase
         _accountsVm ??= new AccountsViewModel(_databaseService);
         NavigateTo(_accountsVm);
         await _accountsVm.RefreshAsync();
+    }
+
+    [RelayCommand]
+    private async Task NavigateToEditBudgetCategories()
+    {
+        _editBudgetCategoriesVm ??= new EditBudgetCategoriesViewModel(_databaseService);
+        NavigateTo(_editBudgetCategoriesVm);
+        await _editBudgetCategoriesVm.RefreshAsync();
+    }
+
+    [RelayCommand]
+    private async Task NavigateToEditRuleCategories()
+    {
+        _editRuleCategoriesVm ??= new EditRuleCategoriesViewModel(_databaseService);
+        NavigateTo(_editRuleCategoriesVm);
+        await _editRuleCategoriesVm.RefreshAsync();
+    }
+
+    [RelayCommand]
+    private async Task NavigateToEditConditions()
+    {
+        _editConditionsVm ??= new EditConditionsViewModel(_databaseService);
+        NavigateTo(_editConditionsVm);
+        await _editConditionsVm.RefreshAsync();
     }
 
     [RelayCommand]

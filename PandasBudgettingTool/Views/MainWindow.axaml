@@ -28,6 +28,9 @@
             </MenuItem>
 
             <MenuItem Header="_Edit">
+                <MenuItem Header="_Budget Categories" Command="{Binding NavigateToEditBudgetCategoriesCommand}"/>
+                <MenuItem Header="_Rule Categories"   Command="{Binding NavigateToEditRuleCategoriesCommand}"/>
+                <MenuItem Header="C_onditions"        Command="{Binding NavigateToEditConditionsCommand}"/>
             </MenuItem>
 
             <MenuItem Header="_Create">
