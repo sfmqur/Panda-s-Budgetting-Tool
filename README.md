@@ -92,6 +92,8 @@ One Rule has many Conditions (1:N). All Conditions must match for the Rule to fi
 |---|---|---|
 | Id | TEXT PK | GUID (`Guid.NewGuid().ToString()`) |
 | RuleName | TEXT FK | Parent Rule.Name — cascades on delete |
+| Rank | INTEGER | Execution order among a Rule's Conditions; lowest first |
+| AndOr | TEXT | `And` or `Or` (see `Models.AndOr`) — combines with the previous Condition's result |
 | IsStringProperty | INTEGER | 1 = string comparison, 0 = numeric |
 | TransactionProperty | TEXT | `Name`, `Amount`, `Date`, etc. |
 | Conditional | TEXT | `Contains`, `Equals`, `GreaterThan`, etc. |

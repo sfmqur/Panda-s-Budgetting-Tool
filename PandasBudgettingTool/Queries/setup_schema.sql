@@ -40,6 +40,8 @@ CREATE TABLE IF NOT EXISTS Rule (
 CREATE TABLE IF NOT EXISTS Condition (
     Id                  TEXT NOT NULL PRIMARY KEY,   -- GUID
     RuleName            TEXT NOT NULL REFERENCES Rule(Name) ON DELETE CASCADE,
+    Rank                INTEGER NOT NULL DEFAULT 0,  -- execution order among a Rule's Conditions; lowest first
+    AndOr               TEXT NOT NULL DEFAULT 'Or',  -- combines with the previous Condition's result: 'And' or 'Or'
     IsStringProperty    INTEGER NOT NULL DEFAULT 1,  -- 1 = string, 0 = numeric
     TransactionProperty TEXT NOT NULL,               -- e.g. "Name", "Amount", "Date"
     Conditional         TEXT NOT NULL,               -- e.g. "Contains", "Equals", "GreaterThan"

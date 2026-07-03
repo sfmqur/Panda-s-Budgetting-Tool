@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using CommunityToolkit.Mvvm.ComponentModel;
 using PandasBudgettingTool.Models;
@@ -12,11 +13,19 @@ public partial class ConditionRowViewModel : ObservableObject
     private static readonly string[] NumericConditionals =
         ["Equals", "NotEquals", "GreaterThan", "LessThan", "GreaterThanOrEqual", "LessThanOrEqual"];
 
+    private static readonly string[] s_andOrOptions = Enum.GetNames<AndOr>();
+
     /// <summary>Primary key — not editable after creation.</summary>
     public string Id { get; }
 
     [ObservableProperty]
     private string _ruleName = string.Empty;
+
+    [ObservableProperty]
+    private decimal? _rank;
+
+    [ObservableProperty]
+    private string _andOr = string.Empty;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(ConditionalOptions))]
@@ -38,12 +47,15 @@ public partial class ConditionRowViewModel : ObservableObject
     public IReadOnlyList<string> RuleNames { get; }
     public IReadOnlyList<string> TransactionProperties { get; } =
         ["Name", "Amount", "Date", "Description", "AccountName", "BudgetCategoryName"];
+    public IReadOnlyList<string> AndOrOptions => s_andOrOptions;
 
     public ConditionRowViewModel(Condition condition, IReadOnlyList<string> ruleNames)
     {
         RuleNames            = ruleNames;
         Id                   = condition.Id;
         _ruleName            = condition.RuleName;
+        _rank                = condition.Rank;
+        _andOr               = condition.AndOr;
         _isStringProperty    = condition.IsStringProperty;
         _transactionProperty = condition.TransactionProperty;
         _conditional         = condition.Conditional;
@@ -57,6 +69,8 @@ public partial class ConditionRowViewModel : ObservableObject
     {
         Id,
         RuleName,
+        Rank = (int)(Rank ?? 0),
+        AndOr,
         IsStringProperty,
         TransactionProperty,
         Conditional,

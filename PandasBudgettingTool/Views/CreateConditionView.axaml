@@ -18,6 +18,17 @@
                       PlaceholderText="Select a rule…"
                       HorizontalAlignment="Stretch"/>
 
+            <TextBlock Text="Rank (execution order, lower runs first)" Margin="0,4,0,0"/>
+            <NumericUpDown Value="{Binding Rank}"
+                           Minimum="0"
+                           Increment="1"
+                           FormatString="0"/>
+
+            <TextBlock Text="And/Or (combine with previous condition)" Margin="0,4,0,0"/>
+            <ComboBox ItemsSource="{Binding AndOrOptions}"
+                      SelectedItem="{Binding SelectedAndOr}"
+                      HorizontalAlignment="Stretch"/>
+
             <TextBlock Text="Transaction Property *" Margin="0,4,0,0"/>
             <ComboBox ItemsSource="{Binding TransactionProperties}"
                       SelectedItem="{Binding SelectedTransactionProperty}"

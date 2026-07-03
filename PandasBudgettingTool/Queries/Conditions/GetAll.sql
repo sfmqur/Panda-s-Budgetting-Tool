@@ -1,3 +1,3 @@
-SELECT Id, RuleName, IsStringProperty, TransactionProperty, Conditional, Value
+SELECT Id, RuleName, Rank, AndOr, IsStringProperty, TransactionProperty, Conditional, Value
 FROM Condition
-ORDER BY RuleName, Id;
+ORDER BY RuleName, Rank, Id;

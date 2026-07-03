@@ -1,2 +1,2 @@
-INSERT INTO Condition (Id, RuleName, IsStringProperty, TransactionProperty, Conditional, Value)
-VALUES (@Id, @RuleName, @IsStringProperty, @TransactionProperty, @Conditional, @Value);
+INSERT INTO Condition (Id, RuleName, Rank, AndOr, IsStringProperty, TransactionProperty, Conditional, Value)
+VALUES (@Id, @RuleName, @Rank, @AndOr, @IsStringProperty, @TransactionProperty, @Conditional, @Value);

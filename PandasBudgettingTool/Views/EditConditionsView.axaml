@@ -46,6 +46,33 @@
                 </DataGridTemplateColumn.CellEditingTemplate>
             </DataGridTemplateColumn>
 
+            <DataGridTemplateColumn Header="Rank" Width="110">
+                <DataGridTemplateColumn.CellTemplate>
+                    <DataTemplate>
+                        <NumericUpDown Value="{Binding Rank}"
+                                       Minimum="0"
+                                       Increment="1"
+                                       FormatString="0"/>
+                    </DataTemplate>
+                </DataGridTemplateColumn.CellTemplate>
+            </DataGridTemplateColumn>
+
+            <DataGridTemplateColumn Header="And/Or" Width="100">
+                <DataGridTemplateColumn.CellTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding AndOr}"
+                                   VerticalAlignment="Center" Margin="12,0"/>
+                    </DataTemplate>
+                </DataGridTemplateColumn.CellTemplate>
+                <DataGridTemplateColumn.CellEditingTemplate>
+                    <DataTemplate>
+                        <ComboBox ItemsSource="{Binding AndOrOptions}"
+                                  SelectedItem="{Binding AndOr}"
+                                  HorizontalAlignment="Stretch"/>
+                    </DataTemplate>
+                </DataGridTemplateColumn.CellEditingTemplate>
+            </DataGridTemplateColumn>
+
             <DataGridTemplateColumn Header="Transaction Property" Width="165">
                 <DataGridTemplateColumn.CellTemplate>
                     <DataTemplate>

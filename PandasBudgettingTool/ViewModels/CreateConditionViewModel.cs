@@ -1,7 +1,9 @@
+using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using PandasBudgettingTool.Models;
 using PandasBudgettingTool.Services;
 
 namespace PandasBudgettingTool.ViewModels;
@@ -16,6 +18,8 @@ public partial class CreateConditionViewModel : ViewModelBase
 
     public static string[] TransactionProperties { get; } =
         ["Name", "Amount", "Date", "Description", "AccountName", "BudgetCategoryName"];
+
+    public static string[] AndOrOptions { get; } = Enum.GetNames<AndOr>();
 
     private static readonly string[] StringConditionals  =
         ["Contains", "StartsWith", "EndsWith", "Equals", "NotEquals"];
@@ -42,6 +46,12 @@ public partial class CreateConditionViewModel : ViewModelBase
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(CreateCommand))]
     private string? _selectedRuleName;
+
+    [ObservableProperty]
+    private decimal? _rank = 0;
+
+    [ObservableProperty]
+    private string _selectedAndOr = nameof(AndOr.Or);
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(CreateCommand))]
@@ -78,6 +88,8 @@ public partial class CreateConditionViewModel : ViewModelBase
         {
             Id                  = System.Guid.NewGuid().ToString(),
             RuleName            = SelectedRuleName,
+            Rank                = (int)(Rank ?? 0),
+            AndOr               = SelectedAndOr,
             IsStringProperty,
             TransactionProperty = SelectedTransactionProperty,
             Conditional         = SelectedConditional,
@@ -91,6 +103,8 @@ public partial class CreateConditionViewModel : ViewModelBase
     private void Clear()
     {
         SelectedRuleName            = null;
+        Rank                        = 0;
+        SelectedAndOr               = nameof(AndOr.Or);
         SelectedTransactionProperty = null;
         IsStringProperty            = true;
         SelectedConditional         = null;
