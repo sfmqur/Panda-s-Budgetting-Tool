@@ -182,7 +182,7 @@ public partial class MainWindowViewModel : ViewModelBase
     [RelayCommand]
     private async Task NavigateToEditBudgetCategories()
     {
-        _editBudgetCategoriesVm ??= new EditBudgetCategoriesViewModel(_databaseService);
+        _editBudgetCategoriesVm ??= new EditBudgetCategoriesViewModel(_databaseService, _dialogService);
         NavigateTo(_editBudgetCategoriesVm);
         await _editBudgetCategoriesVm.RefreshAsync();
     }

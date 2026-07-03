@@ -14,9 +14,14 @@ public partial class EditBudgetCategoriesViewModel : ViewModelBase
     private const string NoParentFilter   = "(No Parent)";
 
     private readonly DatabaseService _db;
+    private readonly DialogService   _dialogService;
     private List<BudgetCategoryRowViewModel> _allCategories = [];
 
-    public EditBudgetCategoriesViewModel(DatabaseService db) => _db = db;
+    public EditBudgetCategoriesViewModel(DatabaseService db, DialogService dialogService)
+    {
+        _db            = db;
+        _dialogService = dialogService;
+    }
 
     public ObservableCollection<BudgetCategoryRowViewModel> Categories { get; } = [];
 
@@ -55,7 +60,32 @@ public partial class EditBudgetCategoriesViewModel : ViewModelBase
         if (!_db.IsOpen) return;
 
         foreach (var row in _allCategories)
+        {
+            if (!string.IsNullOrWhiteSpace(row.Name) && row.Name != row.OriginalName)
+            {
+                await _db.ExecuteQueryAsync("BudgetCategories/Rename.sql", new { OldName = row.OriginalName, NewName = row.Name });
+                row.MarkRenamed();
+            }
+
             await _db.ExecuteQueryAsync("BudgetCategories/Update.sql", row.ToUpdateParam());
+        }
+    }
+
+    /// <summary>Confirms with the user, then deletes the category, clearing it from any Rules/Transactions that reference it.</summary>
+    public async Task DeleteBudgetCategoryAsync(BudgetCategoryRowViewModel row)
+    {
+        if (!_db.IsOpen) return;
+
+        var confirmDelete = await _dialogService.ConfirmAsync(
+            "Delete Budget Category",
+            $"Are you sure you want to delete the budget category \"{row.Name}\"?\n\n" +
+            "Any Rules or Transactions referencing it will have their Budget Category cleared.");
+        if (!confirmDelete) return;
+
+        await _db.ExecuteQueryAsync("BudgetCategories/Delete.sql", new { row.Name });
+
+        _allCategories.Remove(row);
+        Categories.Remove(row);
     }
 
     private void ApplyFilter()

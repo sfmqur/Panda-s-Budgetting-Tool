@@ -41,7 +41,15 @@ public partial class AccountsViewModel : ViewModelBase
         if (!_db.IsOpen) return;
 
         foreach (var row in Accounts)
+        {
+            if (!string.IsNullOrWhiteSpace(row.Name) && row.Name != row.OriginalName)
+            {
+                await _db.ExecuteQueryAsync("Accounts/Rename.sql", new { OldName = row.OriginalName, NewName = row.Name });
+                row.MarkRenamed();
+            }
+
             await _db.ExecuteQueryAsync("Accounts/Update.sql", row.ToUpdateParam());
+        }
     }
 
     /// <summary>

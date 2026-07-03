@@ -8,8 +8,11 @@ namespace PandasBudgettingTool.ViewModels;
 
 public partial class AccountRowViewModel : ObservableObject
 {
-    /// <summary>Primary key — not editable after creation.</summary>
-    public string Name { get; }
+    /// <summary>Name as loaded from the database — used to detect a rename on Save.</summary>
+    public string OriginalName { get; private set; }
+
+    [ObservableProperty]
+    private string _name;
 
     [ObservableProperty]
     private bool _isMinusSignAnExpense;
@@ -25,10 +28,14 @@ public partial class AccountRowViewModel : ObservableObject
 
     public AccountRowViewModel(Account account)
     {
-        Name                 = account.Name;
+        OriginalName          = account.Name;
+        _name                 = account.Name;
         _isMinusSignAnExpense = account.IsMinusSignAnExpense;
-        _importerType        = account.ImporterType;
+        _importerType         = account.ImporterType;
     }
+
+    /// <summary>Call after the rename has been persisted so a later Save doesn't try to rename it again.</summary>
+    public void MarkRenamed() => OriginalName = Name;
 
     public object ToUpdateParam() => new
     {

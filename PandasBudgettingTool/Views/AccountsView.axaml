@@ -12,7 +12,6 @@
         <DataGrid.Columns>
             <DataGridTextColumn Header="Name"
                                 Binding="{Binding Name}"
-                                IsReadOnly="True"
                                 Width="200" />
             <DataGridCheckBoxColumn Header="Minus = Expense"
                                     Binding="{Binding IsMinusSignAnExpense}"
