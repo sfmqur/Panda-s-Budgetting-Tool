@@ -111,7 +111,15 @@
 
             <DataGridTextColumn Header="Value"
                                 Binding="{Binding Value}"
-                                Width="*" />
+                                Width="300" />
+
+            <DataGridTemplateColumn Header="" Width="100">
+                <DataGridTemplateColumn.CellTemplate>
+                    <DataTemplate>
+                        <Button Content="Delete" Click="OnDeleteClick"/>
+                    </DataTemplate>
+                </DataGridTemplateColumn.CellTemplate>
+            </DataGridTemplateColumn>
         </DataGrid.Columns>
 
     </DataGrid>

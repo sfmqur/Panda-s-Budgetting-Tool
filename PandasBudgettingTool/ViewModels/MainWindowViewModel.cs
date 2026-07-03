@@ -154,7 +154,7 @@ public partial class MainWindowViewModel : ViewModelBase
     [RelayCommand]
     private async Task NavigateToTransactions()
     {
-        _transactionsVm ??= new TransactionsViewModel(_databaseService);
+        _transactionsVm ??= new TransactionsViewModel(_databaseService, _dialogService);
         NavigateTo(_transactionsVm);
         await _transactionsVm.RefreshAsync();
     }
@@ -164,7 +164,7 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         if (_accountsVm is null)
         {
-            _accountsVm = new AccountsViewModel(_databaseService);
+            _accountsVm = new AccountsViewModel(_databaseService, _dialogService);
             _accountsVm.OpenTransactionsForAccountRequested += OnOpenTransactionsForAccountRequested;
         }
 
@@ -174,7 +174,7 @@ public partial class MainWindowViewModel : ViewModelBase
 
     private async void OnOpenTransactionsForAccountRequested(string accountName)
     {
-        _transactionsVm ??= new TransactionsViewModel(_databaseService);
+        _transactionsVm ??= new TransactionsViewModel(_databaseService, _dialogService);
         NavigateTo(_transactionsVm);
         await _transactionsVm.FilterToAccountAsync(accountName);
     }
@@ -198,7 +198,7 @@ public partial class MainWindowViewModel : ViewModelBase
     [RelayCommand]
     private async Task NavigateToEditConditions()
     {
-        _editConditionsVm ??= new EditConditionsViewModel(_databaseService);
+        _editConditionsVm ??= new EditConditionsViewModel(_databaseService, _dialogService);
         NavigateTo(_editConditionsVm);
         await _editConditionsVm.RefreshAsync();
     }
@@ -226,7 +226,7 @@ public partial class MainWindowViewModel : ViewModelBase
 
     private async void OnOpenRuleConditionsRequested(string ruleName)
     {
-        _editConditionsVm ??= new EditConditionsViewModel(_databaseService);
+        _editConditionsVm ??= new EditConditionsViewModel(_databaseService, _dialogService);
         await _editConditionsVm.RefreshAsync();
         _editConditionsVm.SelectedRuleFilter = ruleName;
         NavigateTo(_editConditionsVm);

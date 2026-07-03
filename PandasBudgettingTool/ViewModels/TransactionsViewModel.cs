@@ -17,8 +17,13 @@ public partial class TransactionsViewModel : ViewModelBase
     private const string NoneBudgetCategoryFilter  = "(None)";
 
     private readonly DatabaseService _db;
+    private readonly DialogService   _dialogService;
 
-    public TransactionsViewModel(DatabaseService db) => _db = db;
+    public TransactionsViewModel(DatabaseService db, DialogService dialogService)
+    {
+        _db            = db;
+        _dialogService = dialogService;
+    }
 
     // ── Filter properties ─────────────────────────────────────────────────────
 
@@ -80,6 +85,20 @@ public partial class TransactionsViewModel : ViewModelBase
         SelectedBudgetCategoryFilter = AllBudgetCategoriesFilter;
 
         await LoadTransactionsAsync();
+    }
+
+    /// <summary>Confirms with the user, then deletes the given transaction.</summary>
+    public async Task DeleteTransactionAsync(TransactionRowViewModel row)
+    {
+        if (!_db.IsOpen) return;
+
+        var confirmDelete = await _dialogService.ConfirmAsync(
+            "Delete Transaction",
+            $"Are you sure you want to delete the transaction \"{row.Name}\" ({row.Date}, {row.Amount})?");
+        if (!confirmDelete) return;
+
+        await _db.ExecuteQueryAsync("Transactions/Delete.sql", new { row.Id });
+        Transactions.Remove(row);
     }
 
     // ── Private helpers ───────────────────────────────────────────────────────

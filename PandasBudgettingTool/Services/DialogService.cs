@@ -4,6 +4,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Platform.Storage;
+using PandasBudgettingTool.Views;
 
 namespace PandasBudgettingTool.Services;
 
@@ -65,10 +66,28 @@ public class DialogService
         return results.FirstOrDefault()?.Path.LocalPath;
     }
 
+    /// <summary>Shows a Yes/No confirmation dialog and returns true if the user chose Yes.</summary>
+    public async Task<bool> ConfirmAsync(string title, string message)
+    {
+        var owner = GetMainWindow();
+        if (owner is null) return false;
+
+        var dialog = new ConfirmDialogWindow(title, message);
+        var result = await dialog.ShowDialog<bool?>(owner);
+        return result ?? false;
+    }
+
     private static IStorageProvider? GetStorageProvider()
     {
         if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             return TopLevel.GetTopLevel(desktop.MainWindow)?.StorageProvider;
         return null;
+    }
+
+    private static Window? GetMainWindow()
+    {
+        return Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop
+            ? desktop.MainWindow
+            : null;
     }
 }

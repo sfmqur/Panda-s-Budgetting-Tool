@@ -13,9 +13,14 @@ public partial class EditConditionsViewModel : ViewModelBase
     private const string AllRulesFilter = "(All)";
 
     private readonly DatabaseService _db;
+    private readonly DialogService   _dialogService;
     private List<ConditionRowViewModel> _allConditions = [];
 
-    public EditConditionsViewModel(DatabaseService db) => _db = db;
+    public EditConditionsViewModel(DatabaseService db, DialogService dialogService)
+    {
+        _db            = db;
+        _dialogService = dialogService;
+    }
 
     public ObservableCollection<ConditionRowViewModel> Conditions { get; } = [];
 
@@ -51,6 +56,21 @@ public partial class EditConditionsViewModel : ViewModelBase
 
         foreach (var row in _allConditions)
             await _db.ExecuteQueryAsync("Conditions/Update.sql", row.ToUpdateParam());
+    }
+
+    /// <summary>Confirms with the user, then deletes the given condition.</summary>
+    public async Task DeleteConditionAsync(ConditionRowViewModel row)
+    {
+        if (!_db.IsOpen) return;
+
+        var confirmDelete = await _dialogService.ConfirmAsync(
+            "Delete Condition",
+            $"Are you sure you want to delete this condition ({row.TransactionProperty} {row.Conditional} \"{row.Value}\")?");
+        if (!confirmDelete) return;
+
+        await _db.ExecuteQueryAsync("Conditions/Delete.sql", new { row.Id });
+        _allConditions.Remove(row);
+        Conditions.Remove(row);
     }
 
     private void ApplyFilter()

@@ -18,4 +18,12 @@ public partial class AccountsView : UserControl
 
         vm.RequestOpenTransactionsForAccount(row.Name);
     }
+
+    private async void OnDeleteClick(object? sender, RoutedEventArgs e)
+    {
+        if (sender is not Control { DataContext: AccountRowViewModel row }) return;
+        if (DataContext is not AccountsViewModel vm) return;
+
+        await vm.DeleteAccountAsync(row.Name);
+    }
 }

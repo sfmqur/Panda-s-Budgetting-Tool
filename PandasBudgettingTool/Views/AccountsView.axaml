@@ -17,7 +17,7 @@
             <DataGridCheckBoxColumn Header="Minus = Expense"
                                     Binding="{Binding IsMinusSignAnExpense}"
                                     Width="140" />
-            <DataGridTemplateColumn Header="Importer Type" Width="*">
+            <DataGridTemplateColumn Header="Importer Type" Width="350">
                 <DataGridTemplateColumn.CellTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding ImporterType}"
@@ -37,6 +37,14 @@
                 <DataGridTemplateColumn.CellTemplate>
                     <DataTemplate>
                         <Button Content="Transactions" Click="OnTransactionsClick"/>
+                    </DataTemplate>
+                </DataGridTemplateColumn.CellTemplate>
+            </DataGridTemplateColumn>
+
+            <DataGridTemplateColumn Header="" Width="100">
+                <DataGridTemplateColumn.CellTemplate>
+                    <DataTemplate>
+                        <Button Content="Delete" Click="OnDeleteClick"/>
                     </DataTemplate>
                 </DataGridTemplateColumn.CellTemplate>
             </DataGridTemplateColumn>

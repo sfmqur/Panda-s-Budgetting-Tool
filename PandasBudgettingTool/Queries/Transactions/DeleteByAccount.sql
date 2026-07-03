@@ -1,0 +1,1 @@
+DELETE FROM [Transaction] WHERE AccountName = @AccountName;

@@ -1,0 +1,1 @@
+UPDATE [Transaction] SET AccountName = NULL WHERE AccountName = @AccountName;
