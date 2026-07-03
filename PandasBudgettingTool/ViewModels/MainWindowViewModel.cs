@@ -190,7 +190,7 @@ public partial class MainWindowViewModel : ViewModelBase
     [RelayCommand]
     private async Task NavigateToEditRuleCategories()
     {
-        _editRuleCategoriesVm ??= new EditRuleCategoriesViewModel(_databaseService);
+        _editRuleCategoriesVm ??= new EditRuleCategoriesViewModel(_databaseService, _dialogService);
         NavigateTo(_editRuleCategoriesVm);
         await _editRuleCategoriesVm.RefreshAsync();
     }
@@ -216,7 +216,7 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         if (_rulesVm is null)
         {
-            _rulesVm = new RulesViewModel(_databaseService);
+            _rulesVm = new RulesViewModel(_databaseService, _dialogService);
             _rulesVm.OpenRuleConditionsRequested += OnOpenRuleConditionsRequested;
         }
 

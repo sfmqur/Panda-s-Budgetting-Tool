@@ -11,9 +11,14 @@ namespace PandasBudgettingTool.ViewModels;
 public partial class RulesViewModel : ViewModelBase
 {
     private readonly DatabaseService _db;
+    private readonly DialogService   _dialogService;
     private List<RuleTreeNodeViewModel> _allRuleNodes = [];
 
-    public RulesViewModel(DatabaseService db) => _db = db;
+    public RulesViewModel(DatabaseService db, DialogService dialogService)
+    {
+        _db            = db;
+        _dialogService = dialogService;
+    }
 
     public ObservableCollection<RuleTreeNode> RootNodes { get; } = [];
 
@@ -85,5 +90,21 @@ public partial class RulesViewModel : ViewModelBase
 
             await _db.ExecuteQueryAsync("Rules/Update.sql", row.ToUpdateParam());
         }
+    }
+
+    /// <summary>Confirms with the user, then deletes the rule along with all Conditions that reference it.</summary>
+    public async Task DeleteRuleAsync(RuleTreeNodeViewModel row)
+    {
+        if (!_db.IsOpen) return;
+
+        var confirmDelete = await _dialogService.ConfirmAsync(
+            "Delete Rule",
+            $"Are you sure you want to delete the rule \"{row.Name}\"?\n\n" +
+            "All Conditions on this rule will also be deleted.");
+        if (!confirmDelete) return;
+
+        await _db.ExecuteQueryAsync("Rules/Delete.sql", new { row.Name });
+
+        await RefreshAsync();
     }
 }

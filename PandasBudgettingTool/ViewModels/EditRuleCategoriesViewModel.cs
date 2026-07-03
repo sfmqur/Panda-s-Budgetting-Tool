@@ -14,9 +14,14 @@ public partial class EditRuleCategoriesViewModel : ViewModelBase
     private const string NoParentFilter   = "(No Parent)";
 
     private readonly DatabaseService _db;
+    private readonly DialogService   _dialogService;
     private List<RuleCategoryRowViewModel> _allCategories = [];
 
-    public EditRuleCategoriesViewModel(DatabaseService db) => _db = db;
+    public EditRuleCategoriesViewModel(DatabaseService db, DialogService dialogService)
+    {
+        _db            = db;
+        _dialogService = dialogService;
+    }
 
     public ObservableCollection<RuleCategoryRowViewModel> Categories { get; } = [];
 
@@ -64,6 +69,23 @@ public partial class EditRuleCategoriesViewModel : ViewModelBase
 
             await _db.ExecuteQueryAsync("RuleCategories/Update.sql", row.ToUpdateParam());
         }
+    }
+
+    /// <summary>Confirms with the user, then deletes the category, clearing it from any Rules that reference it.</summary>
+    public async Task DeleteRuleCategoryAsync(RuleCategoryRowViewModel row)
+    {
+        if (!_db.IsOpen) return;
+
+        var confirmDelete = await _dialogService.ConfirmAsync(
+            "Delete Rule Category",
+            $"Are you sure you want to delete the rule category \"{row.Name}\"?\n\n" +
+            "Any Rules referencing it will have their Rule Category cleared.");
+        if (!confirmDelete) return;
+
+        await _db.ExecuteQueryAsync("RuleCategories/Delete.sql", new { row.Name });
+
+        _allCategories.Remove(row);
+        Categories.Remove(row);
     }
 
     private void ApplyFilter()

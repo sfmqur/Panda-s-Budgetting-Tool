@@ -29,7 +29,7 @@
                                 Binding="{Binding Name}"
                                 Width="200" />
 
-            <DataGridTemplateColumn Header="Parent Rule Category" Width="*">
+            <DataGridTemplateColumn Header="Parent Rule Category" Width="200">
                 <DataGridTemplateColumn.CellTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding ParentRuleCategoryName}"
@@ -43,6 +43,14 @@
                                   HorizontalAlignment="Stretch"/>
                     </DataTemplate>
                 </DataGridTemplateColumn.CellEditingTemplate>
+            </DataGridTemplateColumn>
+
+            <DataGridTemplateColumn Header="" Width="100">
+                <DataGridTemplateColumn.CellTemplate>
+                    <DataTemplate>
+                        <Button Content="Delete" Click="OnDeleteClick"/>
+                    </DataTemplate>
+                </DataGridTemplateColumn.CellTemplate>
             </DataGridTemplateColumn>
         </DataGrid.Columns>
 

@@ -1,5 +1,0 @@
-﻿1. can you generate the mainwinow and viewmodel.   Leave command functions blank, but do create the command and property bindings, can update Readme.md or another md file with project goals and tasks i send to you. This project will be page based. WE want a menubar With File Edit Navigate and Import
-   Menus. There will be a toolbar below the menubar. Buttons for Save Open, separator. Then buttons that open the pages for: Tranactions, Accounts, Budget, Spending, Rules. Can create those pages if you want, but leave them basic for now. Maybe have a backpage and forward page button on the mainwindow
-   toolbar next to save. The rest of the space will be for the currently open page. This project will have the user select a sqllite db file, with File Open.  We will use Dapper, and sql queries (.sql files) stored in the Queries folder to do database operations. The schema is defined in Readme.md. Can
-   you also generate a File New Command that creates an empty sqllite database. And a single .sql query to setup the table schema.  
-
