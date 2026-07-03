@@ -77,6 +77,17 @@ public class DialogService
         return result ?? false;
     }
 
+    /// <summary>Shows a single-textbox rename dialog and returns the entered name, or null if cancelled/blank.</summary>
+    public async Task<string?> PromptRenameAsync(string title, string message, string currentName)
+    {
+        var owner = GetMainWindow();
+        if (owner is null) return null;
+
+        var dialog = new RenameDialogWindow(title, message, currentName);
+        var result = await dialog.ShowDialog<string?>(owner);
+        return string.IsNullOrWhiteSpace(result) ? null : result;
+    }
+
     private static IStorageProvider? GetStorageProvider()
     {
         if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)

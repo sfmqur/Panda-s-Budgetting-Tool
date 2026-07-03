@@ -1,0 +1,19 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="PandasBudgettingTool.Views.RenameDialogWindow"
+        Width="380"
+        SizeToContent="Height"
+        CanResize="False"
+        WindowStartupLocation="CenterOwner"
+        Title="Rename">
+
+    <StackPanel Margin="20" Spacing="16">
+        <TextBlock Name="MessageText" TextWrapping="Wrap"/>
+        <TextBox Name="NameTextBox"/>
+        <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Right">
+            <Button Content="OK"     Click="OnOkClick"     Width="70" IsDefault="True"/>
+            <Button Content="Cancel" Click="OnCancelClick" Width="70" IsCancel="True"/>
+        </StackPanel>
+    </StackPanel>
+
+</Window>

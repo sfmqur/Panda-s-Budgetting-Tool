@@ -60,15 +60,23 @@ public partial class EditBudgetCategoriesViewModel : ViewModelBase
         if (!_db.IsOpen) return;
 
         foreach (var row in _allCategories)
-        {
-            if (!string.IsNullOrWhiteSpace(row.Name) && row.Name != row.OriginalName)
-            {
-                await _db.ExecuteQueryAsync("BudgetCategories/Rename.sql", new { OldName = row.OriginalName, NewName = row.Name });
-                row.MarkRenamed();
-            }
-
             await _db.ExecuteQueryAsync("BudgetCategories/Update.sql", row.ToUpdateParam());
-        }
+    }
+
+    /// <summary>Prompts the user for a new name, then renames the category — cascading to Parent/Rule/Transaction references.</summary>
+    public async Task RenameBudgetCategoryAsync(BudgetCategoryRowViewModel row)
+    {
+        if (!_db.IsOpen) return;
+
+        var newName = await _dialogService.PromptRenameAsync(
+            "Rename Budget Category",
+            $"Enter a new name for \"{row.OriginalName}\":",
+            row.Name);
+        if (newName is null || newName == row.OriginalName) return;
+
+        await _db.ExecuteQueryAsync("BudgetCategories/Rename.sql", new { OldName = row.OriginalName, NewName = newName });
+
+        await RefreshAsync();
     }
 
     /// <summary>Confirms with the user, then deletes the category, clearing it from any Rules/Transactions that reference it.</summary>

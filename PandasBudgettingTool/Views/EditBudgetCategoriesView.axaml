@@ -27,6 +27,7 @@
         <DataGrid.Columns>
             <DataGridTextColumn Header="Name"
                                 Binding="{Binding Name}"
+                                IsReadOnly="True"
                                 Width="200" />
 
             <DataGridTemplateColumn Header="Parent" Width="200">
@@ -53,10 +54,13 @@
                                 Binding="{Binding BudgetTarget}"
                                 Width="300" />
 
-            <DataGridTemplateColumn Header="" Width="100">
+            <DataGridTemplateColumn Header="" Width="180">
                 <DataGridTemplateColumn.CellTemplate>
                     <DataTemplate>
-                        <Button Content="Delete" Click="OnDeleteClick"/>
+                        <StackPanel Orientation="Horizontal" Spacing="4">
+                            <Button Content="Rename" Click="OnRenameClick"/>
+                            <Button Content="Delete" Click="OnDeleteClick"/>
+                        </StackPanel>
                     </DataTemplate>
                 </DataGridTemplateColumn.CellTemplate>
             </DataGridTemplateColumn>

@@ -6,9 +6,10 @@ namespace PandasBudgettingTool.ViewModels;
 
 public partial class BudgetCategoryRowViewModel : ObservableObject
 {
-    /// <summary>Name as loaded from the database — used to detect a rename on Save.</summary>
-    public string OriginalName { get; private set; }
+    /// <summary>Name as loaded from the database — used as the "old name" when renaming.</summary>
+    public string OriginalName { get; }
 
+    /// <summary>Read-only in the grid — renaming goes through the dedicated Rename dialog/query.</summary>
     [ObservableProperty]
     private string _name;
 
@@ -34,9 +35,6 @@ public partial class BudgetCategoryRowViewModel : ObservableObject
         _isExcludedFromSpendingTotal = category.IsExcludedFromSpendingTotal;
         _budgetTarget                = category.BudgetTarget?.ToString("F2") ?? string.Empty;
     }
-
-    /// <summary>Call after the rename has been persisted so a later Save doesn't try to rename it again.</summary>
-    public void MarkRenamed() => OriginalName = Name;
 
     public object ToUpdateParam() => new
     {
