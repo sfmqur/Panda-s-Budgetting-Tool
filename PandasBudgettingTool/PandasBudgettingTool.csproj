@@ -49,5 +49,8 @@
       <Compile Update="Views\ConfirmDialogWindow.axaml.cs">
         <DependentUpon>ConfirmDialogWindow.axaml</DependentUpon>
       </Compile>
+      <Compile Update="Views\RenameDialogWindow.axaml.cs">
+        <DependentUpon>RenameDialogWindow.axaml</DependentUpon>
+      </Compile>
     </ItemGroup>
 </Project>

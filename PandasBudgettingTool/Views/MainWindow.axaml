@@ -52,7 +52,7 @@
                 <MenuItem Header="_Spending"     Command="{Binding NavigateToSpendingCommand}"/>
                 <MenuItem Header="_Rules"        Command="{Binding NavigateToRulesCommand}"/>
                 <Separator/>
-                <MenuItem Header="Go _Back"    Command="{Binding NavigateBackCommand}"/>
+                <MenuItem Header="Go Bac_k"    Command="{Binding NavigateBackCommand}"/>
                 <MenuItem Header="Go _Forward" Command="{Binding NavigateForwardCommand}"/>
             </MenuItem>
 
