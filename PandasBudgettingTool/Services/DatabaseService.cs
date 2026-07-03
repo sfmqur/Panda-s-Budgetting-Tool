@@ -52,18 +52,20 @@ public class DatabaseService : IDisposable
 
     // ── Dapper helpers ───────────────────────────────────────────────────────
 
-    /// <summary>
-    /// Reads a .sql file from Queries/<paramref name="queryFile"/> and returns mapped rows.
-    /// </summary>
+    /// <summary>Loads a .sql file from Queries/<paramref name="queryFile"/> and returns mapped rows.</summary>
     public async Task<IEnumerable<T>> QueryAsync<T>(string queryFile, object? param = null)
     {
         var sql = await LoadSqlAsync(queryFile);
         return await GetConnection().QueryAsync<T>(sql, param);
     }
 
-    /// <summary>
-    /// Reads a .sql file from Queries/<paramref name="queryFile"/> and executes it.
-    /// </summary>
+    /// <summary>Executes a dynamically-built SQL string directly (e.g. for queries with IN clauses).</summary>
+    public async Task<IEnumerable<T>> QueryRawAsync<T>(string sql, object? param = null)
+    {
+        return await GetConnection().QueryAsync<T>(sql, param);
+    }
+
+    /// <summary>Loads a .sql file from Queries/<paramref name="queryFile"/> and executes it.</summary>
     public async Task ExecuteQueryAsync(string queryFile, object? param = null)
     {
         var sql = await LoadSqlAsync(queryFile);

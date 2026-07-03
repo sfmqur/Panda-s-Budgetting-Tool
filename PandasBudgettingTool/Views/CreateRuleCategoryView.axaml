@@ -13,7 +13,7 @@
             <TextBlock Text="Create Rule Category" FontSize="20" FontWeight="SemiBold" Margin="0,0,0,12"/>
 
             <TextBlock Text="Name *"/>
-            <TextBox Text="{Binding Name}" Watermark="Rule category name"/>
+            <TextBox Text="{Binding Name}" PlaceholderText="Rule category name"/>
 
             <TextBlock Text="Parent Rule Category (optional)" Margin="0,4,0,0"/>
             <ComboBox ItemsSource="{Binding ExistingCategories}"

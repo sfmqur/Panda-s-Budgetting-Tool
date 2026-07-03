@@ -13,7 +13,7 @@
             <TextBlock Text="Create Rule" FontSize="20" FontWeight="SemiBold" Margin="0,0,0,12"/>
 
             <TextBlock Text="Name *"/>
-            <TextBox Text="{Binding Name}" Watermark="Rule name"/>
+            <TextBox Text="{Binding Name}" PlaceholderText="Rule name"/>
 
             <TextBlock Text="Rank (lower runs first)" Margin="0,4,0,0"/>
             <NumericUpDown Value="{Binding Rank}"

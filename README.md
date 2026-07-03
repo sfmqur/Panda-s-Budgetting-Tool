@@ -54,7 +54,7 @@ Sign convention: **negative amount = expense, positive = income**.
 |---|---------|---|
 | Id | TEXT PK | Composite key: `Date\|Name\|Amount` |
 | Date | TEXT    | ISO-8601 YYYY-MM-DD|
-| Name | TEXT    | As imported — not user-editable |
+| Name | TEXT    | As imported; user-editable |
 | Description | TEXT    | User-editable notes |
 | Amount | REAL    | Negative = expense |
 | BudgetCategoryName | TEXT FK | Assigned by rules |

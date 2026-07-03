@@ -1,6 +1,9 @@
+using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using PandasBudgettingTool.Models;
 using PandasBudgettingTool.Services;
 
 namespace PandasBudgettingTool.ViewModels;
@@ -20,6 +23,10 @@ public partial class CreateAccountViewModel : ViewModelBase
 
     [ObservableProperty]
     private string _importerType = string.Empty;
+
+    // Empty string = no importer assigned
+    public IReadOnlyList<string> ImporterTypes { get; } =
+        [string.Empty, .. Enum.GetNames<Importers>()];
 
     private bool CanCreate() => !string.IsNullOrWhiteSpace(Name);
 
@@ -44,5 +51,10 @@ public partial class CreateAccountViewModel : ViewModelBase
         Name = string.Empty;
         IsMinusSignAnExpense = true;
         ImporterType = string.Empty;
+    }
+
+    public override async Task SaveAsync()
+    {
+        if (CanCreate()) await Create();
     }
 }

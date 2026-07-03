@@ -17,10 +17,10 @@
                                 HorizontalAlignment="Stretch"/>
 
             <TextBlock Text="Name *" Margin="0,4,0,0"/>
-            <TextBox Text="{Binding Name}" Watermark="As it appears on the statement"/>
+            <TextBox Text="{Binding Name}" PlaceholderText="As it appears on the statement"/>
 
             <TextBlock Text="Description" Margin="0,4,0,0"/>
-            <TextBox Text="{Binding Description}" Watermark="Optional note"/>
+            <TextBox Text="{Binding Description}" PlaceholderText="Optional note"/>
 
             <TextBlock Text="Amount * (negative = expense)" Margin="0,4,0,0"/>
             <NumericUpDown Value="{Binding Amount}"

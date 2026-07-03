@@ -107,7 +107,18 @@ public partial class MainWindowViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    private void FileSave() { }
+    private async Task FileSave()
+    {
+        if (CurrentPage is not null)
+            await CurrentPage.SaveAsync();
+    }
+
+    [RelayCommand]
+    private async Task Refresh()
+    {
+        if (CurrentPage is not null)
+            await CurrentPage.RefreshAsync();
+    }
 
     [RelayCommand]
     private void Exit()
@@ -137,12 +148,20 @@ public partial class MainWindowViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    private void NavigateToTransactions() =>
-        NavigateTo(_transactionsVm ??= new TransactionsViewModel());
+    private async Task NavigateToTransactions()
+    {
+        _transactionsVm ??= new TransactionsViewModel(_databaseService);
+        NavigateTo(_transactionsVm);
+        await _transactionsVm.RefreshAsync();
+    }
 
     [RelayCommand]
-    private void NavigateToAccounts() =>
-        NavigateTo(_accountsVm ??= new AccountsViewModel());
+    private async Task NavigateToAccounts()
+    {
+        _accountsVm ??= new AccountsViewModel(_databaseService);
+        NavigateTo(_accountsVm);
+        await _accountsVm.RefreshAsync();
+    }
 
     [RelayCommand]
     private void NavigateToBudget() =>

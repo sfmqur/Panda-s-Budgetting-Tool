@@ -90,4 +90,11 @@ public partial class CreateTransactionViewModel : ViewModelBase
         UserAdjustedCategory     = false;
         SelectedAccountName      = null;
     }
+
+    public override async Task SaveAsync()
+    {
+        if (CanCreate()) await Create();
+    }
+
+    public override async Task RefreshAsync() => await LoadOptionsAsync();
 }

@@ -67,4 +67,11 @@ public partial class CreateRuleViewModel : ViewModelBase
         SelectedBudgetCategoryName = null;
         SelectedRuleCategoryName   = null;
     }
+
+    public override async Task SaveAsync()
+    {
+        if (CanCreate()) await Create();
+    }
+
+    public override async Task RefreshAsync() => await LoadOptionsAsync();
 }

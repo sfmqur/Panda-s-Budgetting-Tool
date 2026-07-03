@@ -53,4 +53,11 @@ public partial class CreateRuleCategoryViewModel : ViewModelBase
         Name = string.Empty;
         SelectedParentRuleCategoryName = null;
     }
+
+    public override async Task SaveAsync()
+    {
+        if (CanCreate()) await Create();
+    }
+
+    public override async Task RefreshAsync() => await LoadOptionsAsync();
 }

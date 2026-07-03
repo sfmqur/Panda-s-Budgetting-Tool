@@ -62,4 +62,11 @@ public partial class CreateBudgetCategoryViewModel : ViewModelBase
         IsExcludedFromSpendingTotal = false;
         BudgetTarget = null;
     }
+
+    public override async Task SaveAsync()
+    {
+        if (CanCreate()) await Create();
+    }
+
+    public override async Task RefreshAsync() => await LoadOptionsAsync();
 }

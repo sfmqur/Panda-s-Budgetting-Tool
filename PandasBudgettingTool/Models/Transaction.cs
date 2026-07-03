@@ -8,7 +8,6 @@ public class Transaction
     public string Id { get; set; } = string.Empty;
     /// <summary>Stored as ISO-8601 text (YYYY-MM-DD) in SQLite.</summary>
     public DateTime Date { get; set; }
-    /// <summary>Name as it appears in the import file — not user-editable.</summary>
     public string Name { get; set; } = string.Empty;
     /// <summary>User-editable free-text note.</summary>
     public string Description { get; set; } = string.Empty;

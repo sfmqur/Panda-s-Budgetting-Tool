@@ -1,21 +1,39 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:vm="using:PandasBudgettingTool.ViewModels"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="PandasBudgettingTool.Views.AccountsView"
-             x:DataType="vm:AccountsViewModel">
+             x:CompileBindings="False">
 
-    <Design.DataContext>
-        <vm:AccountsViewModel/>
-    </Design.DataContext>
+    <DataGrid ItemsSource="{Binding Accounts}"
+              AutoGenerateColumns="False"
+              CanUserResizeColumns="True"
+              GridLinesVisibility="Horizontal"
+              Margin="4">
 
-    <Grid>
-        <TextBlock Text="Accounts"
-                   HorizontalAlignment="Center"
-                   VerticalAlignment="Center"
-                   FontSize="24"
-                   Foreground="{DynamicResource SystemControlForegroundBaseMediumLowBrush}"/>
-    </Grid>
+        <DataGrid.Columns>
+            <DataGridTextColumn Header="Name"
+                                Binding="{Binding Name}"
+                                IsReadOnly="True"
+                                Width="200" />
+            <DataGridCheckBoxColumn Header="Minus = Expense"
+                                    Binding="{Binding IsMinusSignAnExpense}"
+                                    Width="140" />
+            <DataGridTemplateColumn Header="Importer Type" Width="*">
+                <DataGridTemplateColumn.CellTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding ImporterType}"
+                                   VerticalAlignment="Center" Margin="12,0"/>
+                    </DataTemplate>
+                </DataGridTemplateColumn.CellTemplate>
+                <DataGridTemplateColumn.CellEditingTemplate>
+                    <DataTemplate>
+                        <ComboBox ItemsSource="{Binding ImporterTypes}"
+                                  SelectedItem="{Binding ImporterType}"
+                                  HorizontalAlignment="Stretch"/>
+                    </DataTemplate>
+                </DataGridTemplateColumn.CellEditingTemplate>
+            </DataGridTemplateColumn>
+        </DataGrid.Columns>
+
+    </DataGrid>
+
 </UserControl>

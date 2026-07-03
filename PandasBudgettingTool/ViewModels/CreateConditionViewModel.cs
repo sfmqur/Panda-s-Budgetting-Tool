@@ -96,4 +96,11 @@ public partial class CreateConditionViewModel : ViewModelBase
         SelectedConditional         = null;
         Value                       = string.Empty;
     }
+
+    public override async Task SaveAsync()
+    {
+        if (CanCreate()) await Create();
+    }
+
+    public override async Task RefreshAsync() => await LoadOptionsAsync();
 }

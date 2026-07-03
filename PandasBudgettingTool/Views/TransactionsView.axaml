@@ -1,21 +1,108 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:vm="using:PandasBudgettingTool.ViewModels"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="PandasBudgettingTool.Views.TransactionsView"
-             x:DataType="vm:TransactionsViewModel">
+             x:CompileBindings="False">
 
-    <Design.DataContext>
-        <vm:TransactionsViewModel/>
-    </Design.DataContext>
+    <DockPanel>
 
-    <Grid>
-        <TextBlock Text="Transactions"
-                   HorizontalAlignment="Center"
-                   VerticalAlignment="Center"
-                   FontSize="24"
-                   Foreground="{DynamicResource SystemControlForegroundBaseMediumLowBrush}"/>
-    </Grid>
+        <!-- Filter panel -->
+        <Border DockPanel.Dock="Top"
+                BorderBrush="{DynamicResource SystemBaseLowColor}"
+                BorderThickness="0,0,0,1"
+                Padding="8,6">
+            <StackPanel Orientation="Vertical" Spacing="4">
+
+                <!-- Date range + Apply button -->
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <TextBlock Text="From:" VerticalAlignment="Center"/>
+                    <CalendarDatePicker SelectedDate="{Binding FromDate}" Width="140"/>
+                    <TextBlock Text="To:" VerticalAlignment="Center"/>
+                    <CalendarDatePicker SelectedDate="{Binding ToDate}" Width="140"/>
+                    <Button Content="Apply Filter"
+                            Command="{Binding ApplyFilterCommand}"
+                            VerticalAlignment="Center"/>
+                </StackPanel>
+
+                <!-- Account checkbox dropdown -->
+                <Expander Header="Accounts">
+                    <ListBox ItemsSource="{Binding AccountFilters}"
+                             MaxHeight="200"
+                             MinWidth="220"
+                             SelectionMode="Multiple">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <CheckBox IsChecked="{Binding IsSelected}"
+                                          Content="{Binding DisplayName}"/>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Expander>
+
+            </StackPanel>
+        </Border>
+
+        <!-- Transaction grid -->
+        <DataGrid ItemsSource="{Binding Transactions}"
+                  AutoGenerateColumns="False"
+                  CanUserResizeColumns="True"
+                  GridLinesVisibility="Horizontal">
+
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Id"
+                                    Binding="{Binding Id}"
+                                    IsReadOnly="True"
+                                    Width="150" />
+                <DataGridTextColumn Header="Date"
+                                    Binding="{Binding Date}"
+                                    Width="120" />
+                <DataGridTextColumn Header="Name"
+                                    Binding="{Binding Name}"
+                                    Width="400" />
+                <DataGridTextColumn Header="Description"
+                                    Binding="{Binding Description}"
+                                    Width="*" />
+                <DataGridTextColumn Header="Amount"
+                                    Binding="{Binding Amount}"
+                                    Width="100" />
+                <DataGridTemplateColumn Header="Budget Category" Width="200">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding BudgetCategoryName}"
+                                       VerticalAlignment="Center" Margin="12,0"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                    <DataGridTemplateColumn.CellEditingTemplate>
+                        <DataTemplate>
+                            <ComboBox ItemsSource="{Binding BudgetCategoryOptions}"
+                                      SelectedItem="{Binding BudgetCategoryName}"
+                                      HorizontalAlignment="Stretch"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellEditingTemplate>
+                </DataGridTemplateColumn>
+
+                <DataGridCheckBoxColumn Header="Skip Rules"
+                                        Binding="{Binding UserAdjustedCategory}"
+                                        Width="120" />
+
+                <DataGridTemplateColumn Header="Account" Width="250">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding AccountName}"
+                                       VerticalAlignment="Center" Margin="12,0"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                    <DataGridTemplateColumn.CellEditingTemplate>
+                        <DataTemplate>
+                            <ComboBox ItemsSource="{Binding AccountOptions}"
+                                      SelectedItem="{Binding AccountName}"
+                                      HorizontalAlignment="Stretch"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellEditingTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+
+        </DataGrid>
+
+    </DockPanel>
+
 </UserControl>

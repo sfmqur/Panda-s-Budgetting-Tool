@@ -8,6 +8,7 @@
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
         Title="{Binding WindowTitle}"
+        WindowState="Maximized"
         MinWidth="800" MinHeight="500">
 
     <Design.DataContext>
@@ -64,8 +65,9 @@
                 <Button Command="{Binding NavigateForwardCommand}" ToolTip.Tip="Go Forward" Padding="8,4">▶</Button>
                 <Rectangle Width="1" Margin="4,2"
                            Fill="{DynamicResource SystemControlForegroundBaseMediumLowBrush}"/>
-                <Button Command="{Binding FileSaveCommand}" ToolTip.Tip="Save"          Padding="8,4">Save</Button>
-                <Button Command="{Binding FileOpenCommand}" ToolTip.Tip="Open Database" Padding="8,4">Open</Button>
+                <Button Command="{Binding FileSaveCommand}"  ToolTip.Tip="Save"            Padding="8,4">Save</Button>
+                <Button Command="{Binding FileOpenCommand}"  ToolTip.Tip="Open Database"  Padding="8,4">Open</Button>
+                <Button Command="{Binding RefreshCommand}"   ToolTip.Tip="Refresh"        Padding="8,4">Refresh</Button>
                 <Rectangle Width="1" Margin="4,2"
                            Fill="{DynamicResource SystemControlForegroundBaseMediumLowBrush}"/>
                 <Button Command="{Binding NavigateToTransactionsCommand}" Padding="8,4">Transactions</Button>
