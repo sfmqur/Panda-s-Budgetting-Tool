@@ -6,8 +6,11 @@ namespace PandasBudgettingTool.ViewModels;
 
 public partial class RuleCategoryRowViewModel : ObservableObject
 {
-    /// <summary>Primary key — not editable after creation.</summary>
-    public string Name { get; }
+    /// <summary>Name as loaded from the database — used to detect a rename on Save.</summary>
+    public string OriginalName { get; private set; }
+
+    [ObservableProperty]
+    private string _name;
 
     [ObservableProperty]
     private string? _parentRuleCategoryName;
@@ -17,10 +20,14 @@ public partial class RuleCategoryRowViewModel : ObservableObject
 
     public RuleCategoryRowViewModel(RuleCategory category, IReadOnlyList<string?> parentOptions)
     {
-        ParentOptions          = parentOptions;
-        Name                   = category.Name;
+        ParentOptions           = parentOptions;
+        OriginalName            = category.Name;
+        _name                   = category.Name;
         _parentRuleCategoryName = category.ParentRuleCategoryName;
     }
+
+    /// <summary>Call after the rename has been persisted so a later Save doesn't try to rename it again.</summary>
+    public void MarkRenamed() => OriginalName = Name;
 
     public object ToUpdateParam() => new
     {

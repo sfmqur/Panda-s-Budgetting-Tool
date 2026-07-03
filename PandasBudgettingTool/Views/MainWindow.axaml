@@ -28,8 +28,11 @@
             </MenuItem>
 
             <MenuItem Header="_Edit">
+                <MenuItem Header="_Transactions"     Command="{Binding NavigateToTransactionsCommand}"/>
+                <MenuItem Header="_Accounts"         Command="{Binding NavigateToAccountsCommand}"/>
                 <MenuItem Header="_Budget Categories" Command="{Binding NavigateToEditBudgetCategoriesCommand}"/>
-                <MenuItem Header="_Rule Categories"   Command="{Binding NavigateToEditRuleCategoriesCommand}"/>
+                <MenuItem Header="_Rules"            Command="{Binding NavigateToRulesCommand}"/>
+                <MenuItem Header="Rule _Categories"   Command="{Binding NavigateToEditRuleCategoriesCommand}"/>
                 <MenuItem Header="C_onditions"        Command="{Binding NavigateToEditConditionsCommand}"/>
             </MenuItem>
 

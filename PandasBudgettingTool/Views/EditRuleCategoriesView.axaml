@@ -27,7 +27,6 @@
         <DataGrid.Columns>
             <DataGridTextColumn Header="Name"
                                 Binding="{Binding Name}"
-                                IsReadOnly="True"
                                 Width="200" />
 
             <DataGridTemplateColumn Header="Parent Rule Category" Width="*">

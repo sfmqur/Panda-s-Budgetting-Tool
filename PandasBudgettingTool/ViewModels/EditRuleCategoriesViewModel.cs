@@ -55,7 +55,15 @@ public partial class EditRuleCategoriesViewModel : ViewModelBase
         if (!_db.IsOpen) return;
 
         foreach (var row in _allCategories)
+        {
+            if (!string.IsNullOrWhiteSpace(row.Name) && row.Name != row.OriginalName)
+            {
+                await _db.ExecuteQueryAsync("RuleCategories/Rename.sql", new { OldName = row.OriginalName, NewName = row.Name });
+                row.MarkRenamed();
+            }
+
             await _db.ExecuteQueryAsync("RuleCategories/Update.sql", row.ToUpdateParam());
+        }
     }
 
     private void ApplyFilter()

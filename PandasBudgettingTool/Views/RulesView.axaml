@@ -3,19 +3,48 @@
              xmlns:vm="using:PandasBudgettingTool.ViewModels"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="500"
              x:Class="PandasBudgettingTool.Views.RulesView"
-             x:DataType="vm:RulesViewModel">
+             x:CompileBindings="False">
 
     <Design.DataContext>
         <vm:RulesViewModel/>
     </Design.DataContext>
 
-    <Grid>
-        <TextBlock Text="Rules"
-                   HorizontalAlignment="Center"
-                   VerticalAlignment="Center"
-                   FontSize="24"
-                   Foreground="{DynamicResource SystemControlForegroundBaseMediumLowBrush}"/>
-    </Grid>
+    <UserControl.DataTemplates>
+
+        <TreeDataTemplate DataType="vm:RuleCategoryTreeNodeViewModel" ItemsSource="{Binding Children}">
+            <TextBlock Text="{Binding Name}"
+                       FontWeight="SemiBold"
+                       VerticalAlignment="Center"
+                       Margin="4,4"/>
+        </TreeDataTemplate>
+
+        <TreeDataTemplate DataType="vm:RuleTreeNodeViewModel" ItemsSource="{Binding Children}">
+            <Border Padding="4,2">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <TextBox Text="{Binding Name}" Width="180" VerticalAlignment="Center"/>
+
+                    <TextBlock Text="Rank:" VerticalAlignment="Center"/>
+                    <NumericUpDown Value="{Binding Rank}" Width="100" FormatString="0"/>
+
+                    <TextBlock Text="Budget Category:" VerticalAlignment="Center"/>
+                    <ComboBox ItemsSource="{Binding BudgetCategoryOptions}"
+                              SelectedItem="{Binding BudgetCategoryName}"
+                              MinWidth="150"/>
+
+                    <TextBlock Text="Rule Category:" VerticalAlignment="Center"/>
+                    <ComboBox ItemsSource="{Binding RuleCategoryOptions}"
+                              SelectedItem="{Binding RuleCategoryName}"
+                              MinWidth="150"/>
+
+                    <Button Content="Conditions" Click="OnConditionsClick"/>
+                </StackPanel>
+            </Border>
+        </TreeDataTemplate>
+
+    </UserControl.DataTemplates>
+
+    <TreeView ItemsSource="{Binding RootNodes}" Margin="4"/>
+
 </UserControl>

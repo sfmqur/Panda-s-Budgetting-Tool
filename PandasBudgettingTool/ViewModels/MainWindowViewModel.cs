@@ -199,8 +199,25 @@ public partial class MainWindowViewModel : ViewModelBase
         NavigateTo(_spendingVm ??= new SpendingViewModel());
 
     [RelayCommand]
-    private void NavigateToRules() =>
-        NavigateTo(_rulesVm ??= new RulesViewModel());
+    private async Task NavigateToRules()
+    {
+        if (_rulesVm is null)
+        {
+            _rulesVm = new RulesViewModel(_databaseService);
+            _rulesVm.OpenRuleConditionsRequested += OnOpenRuleConditionsRequested;
+        }
+
+        NavigateTo(_rulesVm);
+        await _rulesVm.RefreshAsync();
+    }
+
+    private async void OnOpenRuleConditionsRequested(string ruleName)
+    {
+        _editConditionsVm ??= new EditConditionsViewModel(_databaseService);
+        await _editConditionsVm.RefreshAsync();
+        _editConditionsVm.SelectedRuleFilter = ruleName;
+        NavigateTo(_editConditionsVm);
+    }
 
     // ── Create Navigation ─────────────────────────────────────────────────────
 

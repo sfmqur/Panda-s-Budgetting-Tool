@@ -1,7 +1,89 @@
-using CommunityToolkit.Mvvm.ComponentModel;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading.Tasks;
+using PandasBudgettingTool.Models;
+using PandasBudgettingTool.Services;
 
 namespace PandasBudgettingTool.ViewModels;
 
 public partial class RulesViewModel : ViewModelBase
 {
+    private readonly DatabaseService _db;
+    private List<RuleTreeNodeViewModel> _allRuleNodes = [];
+
+    public RulesViewModel(DatabaseService db) => _db = db;
+
+    public ObservableCollection<RuleTreeNode> RootNodes { get; } = [];
+
+    /// <summary>Raised when a Rule row is double-clicked — the argument is the Rule's Name.</summary>
+    public event Action<string>? OpenRuleConditionsRequested;
+
+    public void RequestOpenRuleConditions(string ruleName) => OpenRuleConditionsRequested?.Invoke(ruleName);
+
+    public override async Task RefreshAsync()
+    {
+        RootNodes.Clear();
+        if (!_db.IsOpen) return;
+
+        var categories = (await _db.QueryAsync<RuleCategory>("RuleCategories/GetAll.sql")).ToList();
+        var rules      = (await _db.QueryAsync<Rule>("Rules/GetAll.sql")).ToList();
+
+        var budgetCategoryOptions = new List<string?> { null };
+        budgetCategoryOptions.AddRange(await _db.QueryAsync<string>("BudgetCategories/GetAllNames.sql"));
+
+        var ruleCategoryOptions = new List<string?> { null };
+        ruleCategoryOptions.AddRange(categories.Select(c => c.Name));
+
+        _allRuleNodes = rules
+            .Select(r => new RuleTreeNodeViewModel(r, budgetCategoryOptions, ruleCategoryOptions))
+            .ToList();
+
+        var categoryNodes = categories.ToDictionary(
+            c => c.Name,
+            c => new RuleCategoryTreeNodeViewModel(c.Name));
+
+        // Sub-categories first …
+        foreach (var cat in categories)
+        {
+            if (cat.ParentRuleCategoryName is not null
+                && categoryNodes.TryGetValue(cat.ParentRuleCategoryName, out var parentNode))
+            {
+                parentNode.Children.Add(categoryNodes[cat.Name]);
+            }
+        }
+
+        // … then the rules that belong directly to each category.
+        foreach (var ruleNode in _allRuleNodes)
+        {
+            if (ruleNode.RuleCategoryName is not null
+                && categoryNodes.TryGetValue(ruleNode.RuleCategoryName, out var parentNode))
+            {
+                parentNode.Children.Add(ruleNode);
+            }
+        }
+
+        foreach (var cat in categories.Where(c => c.ParentRuleCategoryName is null))
+            RootNodes.Add(categoryNodes[cat.Name]);
+
+        foreach (var ruleNode in _allRuleNodes.Where(r => r.RuleCategoryName is null))
+            RootNodes.Add(ruleNode);
+    }
+
+    public override async Task SaveAsync()
+    {
+        if (!_db.IsOpen) return;
+
+        foreach (var row in _allRuleNodes)
+        {
+            if (!string.IsNullOrWhiteSpace(row.Name) && row.Name != row.OriginalName)
+            {
+                await _db.ExecuteQueryAsync("Rules/Rename.sql", new { OldName = row.OriginalName, NewName = row.Name });
+                row.MarkRenamed();
+            }
+
+            await _db.ExecuteQueryAsync("Rules/Update.sql", row.ToUpdateParam());
+        }
+    }
 }
