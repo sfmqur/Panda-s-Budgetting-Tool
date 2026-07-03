@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using CommunityToolkit.Mvvm.ComponentModel;
 using PandasBudgettingTool.Models;
+using PandasBudgettingTool.Models.Importing;
 
 namespace PandasBudgettingTool.ViewModels;
 
@@ -18,7 +19,7 @@ public partial class AccountRowViewModel : ObservableObject
 
     // Options list shared by all rows — empty string = no importer assigned
     private static readonly IReadOnlyList<string> s_importerTypes =
-        [string.Empty, .. Enum.GetNames<Importers>()];
+        [string.Empty, .. Enum.GetNames<ImporterType>()];
 
     public IReadOnlyList<string> ImporterTypes => s_importerTypes;
 

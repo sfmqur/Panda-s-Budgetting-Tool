@@ -1,0 +1,10 @@
+﻿On the website (desktop)
+
+1.Log in to Wells Fargo Online Banking.
+2.Click into the account you want (checking, savings, credit card, etc.).
+3.Find the transaction history/account activity section and look for a Download or Download Account Activity link.
+4.Choose your date range.
+5.For the file format, select "Comma Delimited (ASCII/Spreadsheet)" — this produces a CSV file that opens directly in 
+Excel, Google Sheets, or any spreadsheet application, with each row containing a transaction and columns for date, 
+description, amount, and running balance. Invoicedataextraction
+6.Click Download — the CSV saves to your computer.

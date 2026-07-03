@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using PandasBudgettingTool.Models;
+using PandasBudgettingTool.Models.Importing;
 using PandasBudgettingTool.Services;
 
 namespace PandasBudgettingTool.ViewModels;
@@ -26,7 +27,7 @@ public partial class CreateAccountViewModel : ViewModelBase
 
     // Empty string = no importer assigned
     public IReadOnlyList<string> ImporterTypes { get; } =
-        [string.Empty, .. Enum.GetNames<Importers>()];
+        [string.Empty, .. Enum.GetNames<ImporterType>()];
 
     private bool CanCreate() => !string.IsNullOrWhiteSpace(Name);
 
