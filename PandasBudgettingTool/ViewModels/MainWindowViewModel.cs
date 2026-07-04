@@ -225,8 +225,17 @@ public partial class MainWindowViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    private void NavigateToSpending() =>
-        NavigateTo(_spendingVm ??= new SpendingViewModel());
+    private async Task NavigateToSpending()
+    {
+        if (_spendingVm is null)
+        {
+            _spendingVm = new SpendingViewModel(_databaseService);
+            _spendingVm.OpenTransactionsForCategoryRequested += OnOpenTransactionsForCategoryRequested;
+        }
+
+        NavigateTo(_spendingVm);
+        await _spendingVm.RefreshAsync();
+    }
 
     [RelayCommand]
     private async Task NavigateToRules()
