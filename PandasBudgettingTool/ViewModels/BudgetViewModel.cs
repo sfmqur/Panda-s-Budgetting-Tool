@@ -91,6 +91,7 @@ public partial class BudgetViewModel : ViewModelBase
     [RelayCommand]
     private async Task Save() => await SaveAsync();
 
+    // todo 30 day avg  math seems funky, Something isn't working here, especially with negative numbers. 
     /// <summary>Recursively rolls up budget targets and actual spend; returns this node's own (target, spend) totals for its parent.</summary>
     private static (decimal budgetTotal, decimal spendTotal) ComputeRollup(
         BudgetCategoryNodeViewModel node,
