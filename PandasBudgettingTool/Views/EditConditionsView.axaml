@@ -93,7 +93,7 @@
                                     Binding="{Binding IsStringProperty}"
                                     Width="95" />
 
-            <DataGridTemplateColumn Header="Conditional" Width="160">
+            <DataGridTemplateColumn Header="Conditional" Width="200">
                 <DataGridTemplateColumn.CellTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding Conditional}"

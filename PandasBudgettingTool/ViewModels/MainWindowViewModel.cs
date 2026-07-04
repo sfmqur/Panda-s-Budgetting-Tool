@@ -204,8 +204,12 @@ public partial class MainWindowViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    private void NavigateToBudget() =>
-        NavigateTo(_budgetVm ??= new BudgetViewModel());
+    private async Task NavigateToBudget()
+    {
+        _budgetVm ??= new BudgetViewModel(_databaseService);
+        NavigateTo(_budgetVm);
+        await _budgetVm.RefreshAsync();
+    }
 
     [RelayCommand]
     private void NavigateToSpending() =>
