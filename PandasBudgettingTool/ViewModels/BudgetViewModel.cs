@@ -110,7 +110,7 @@ public partial class BudgetViewModel : ViewModelBase
 
         node.ChildrenBudgetSum = childrenBudgetSum;
         node.TotalBudget       = (node.OwnBudgetTarget ?? 0) + childrenBudgetSum;
-        node.AverageSpend      = spendRollup / (decimal)(daysInRange / 30.0);
+        node.AverageSpend      = -1* spendRollup / (decimal)(daysInRange / 30.0);
 
         return (node.TotalBudget, spendRollup);
     }

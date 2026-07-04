@@ -22,7 +22,7 @@
 
                 <TextBlock TextWrapping="Wrap" MaxWidth="900">
                     <Run Text="Budget:" FontWeight="SemiBold"/>
-                    <Run Text="the target you set for this category. - is expense target  "/>
+                    <Run Text="the target you set for this category. minus is expense target  "/>
                     <Run Text="Children Budget:" FontWeight="SemiBold"/>
                     <Run Text="the sum of every sub-category's budget, recursively.  "/>
                     <Run Text="Total Budget:" FontWeight="SemiBold"/>
