@@ -27,6 +27,23 @@ public partial class SpendingViewModel : ViewModelBase
 
     public ObservableCollection<SpendingCategoryNodeViewModel> RootNodes { get; } = [];
 
+    /// <summary>Sum of SpendingForTerm across every category (not just roots) where IsExcludedFromSpendingTotal is false
+    /// and spending for term < 0 .</summary>
+    [ObservableProperty]
+    private decimal _netCashFlow;
+
+    /// <summary>Sum of each category's own BudgetTarget where IsExcludedFromSpendingTotal is false. and spending for term < 0 </summary>
+    [ObservableProperty]
+    private decimal _totalCashFlow;
+    
+    /// <summary>Sum of SpendingForTerm across every category (not just roots) where IsExcludedFromSpendingTotal is false.</summary>
+    [ObservableProperty]
+    private decimal _netExpenses;
+
+    /// <summary>Sum of each category's own BudgetTarget where IsExcludedFromSpendingTotal is false.</summary>
+    [ObservableProperty]
+    private decimal _totalExpenses;
+
     /// <summary>Raised when a category row's Transactions button is clicked — args are the category name and the current date range.</summary>
     public event Action<string, DateTime, DateTime>? OpenTransactionsForCategoryRequested;
 
@@ -70,6 +87,14 @@ public partial class SpendingViewModel : ViewModelBase
 
         foreach (var root in RootNodes)
             ComputeRollup(root, directSpend);
+
+        // Summed per-category (not the tree's rolled-up totals) so parent/child amounts aren't double-counted.
+        var nonExcludedCategories = categories.Where(c => !c.IsExcludedFromSpendingTotal).ToList();
+        var nonExcludeExpenseCats = nonExcludedCategories.Where(c => c.BudgetTarget < 0).ToList();
+        NetCashFlow = nonExcludedCategories.Sum(c => directSpend.GetValueOrDefault(c.Name));
+        TotalCashFlow = nonExcludedCategories.Sum(c => c.BudgetTarget ?? 0);
+        NetExpenses = nonExcludeExpenseCats.Sum(c => directSpend.GetValueOrDefault(c.Name));
+        TotalExpenses = nonExcludeExpenseCats.Sum(c => c.BudgetTarget ?? 0);
     }
 
     /// <summary>No editable fields on this page — just reloads and recomputes for the current date range.</summary>

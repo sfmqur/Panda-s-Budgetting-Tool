@@ -41,6 +41,26 @@
             </StackPanel>
         </Border>
 
+        <!-- Net totals -->
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Spacing="24" Margin="8,8,8,0">
+            <StackPanel Orientation="Horizontal" Spacing="6">
+                <TextBlock Text="Net Expenses:" FontWeight="SemiBold"/>
+                <TextBlock Text="{Binding NetExpenses, StringFormat={}{0:F2}}"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Spacing="6">
+                <TextBlock Text="Target Expenses:" FontWeight="SemiBold"/>
+                <TextBlock Text="{Binding TotalExpenses, StringFormat={}{0:F2}}"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Spacing="6">
+                <TextBlock Text="Net Cash Flow:" FontWeight="SemiBold"/>
+                <TextBlock Text="{Binding NetCashFlow, StringFormat={}{0:F2}}"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Spacing="6">
+                <TextBlock Text="Target Cash Flow:" FontWeight="SemiBold"/>
+                <TextBlock Text="{Binding TotalCashFlow, StringFormat={}{0:F2}}"/>
+            </StackPanel>
+        </StackPanel>
+
         <!-- Column headers -->
         <Grid DockPanel.Dock="Top" ColumnDefinitions="260,160,160,160,120" Margin="8,8,8,0">
             <TextBlock Grid.Column="1" Text="Spent"     FontWeight="SemiBold" HorizontalAlignment="Right" Margin="0,0,10,0"/>
