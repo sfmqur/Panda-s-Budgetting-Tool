@@ -46,7 +46,7 @@
         </Border>
 
         <!-- Column headers -->
-        <Grid DockPanel.Dock="Top" ColumnDefinitions="260,160,160,160,20,160" Margin="8,8,8,0">
+        <Grid DockPanel.Dock="Top" ColumnDefinitions="260,160,160,160,20,160,110" Margin="8,8,8,0">
             <TextBlock Grid.Column="1" Text="Budget"          FontWeight="SemiBold" HorizontalAlignment="Right" Margin="0,0,10,0"/>
             <TextBlock Grid.Column="2" Text="Children Budget" FontWeight="SemiBold" HorizontalAlignment="Right" Margin="0,0,10,0"/>
             <TextBlock Grid.Column="3" Text="Total Budget"    FontWeight="SemiBold" HorizontalAlignment="Right" Margin="0,0,10,0"/>
@@ -56,7 +56,7 @@
         <TreeView ItemsSource="{Binding RootNodes}" Margin="4">
             <TreeView.ItemTemplate>
                 <TreeDataTemplate ItemsSource="{Binding Children}">
-                    <Grid ColumnDefinitions="260,160,160,160,20,160">
+                    <Grid ColumnDefinitions="260,160,160,160,20,160,120">
                         <TextBlock Grid.Column="0" Text="{Binding Name}" VerticalAlignment="Center"/>
 
                         <NumericUpDown Grid.Column="1"
@@ -77,6 +77,7 @@
 
                         <TextBlock Grid.Column="5" Text="{Binding AverageSpend, StringFormat={}{0:F2}}"
                                    VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                        <Button Grid.Column="6" Content="Transactions" Click="OnTransactionsClick" Margin="15,0,0,0"/>
                     </Grid>
                 </TreeDataTemplate>
             </TreeView.ItemTemplate>

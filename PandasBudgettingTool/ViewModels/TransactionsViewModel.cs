@@ -87,6 +87,25 @@ public partial class TransactionsViewModel : ViewModelBase
         await LoadTransactionsAsync();
     }
 
+    /// <summary>Selects every account, sets the Budget Category filter to the given category, applies the given date range, and reloads.</summary>
+    public async Task FilterToBudgetCategoryAsync(string categoryName, DateTime fromDate, DateTime toDate)
+    {
+        await LoadAccountFiltersAsync();
+        await LoadDropdownOptionsAsync();
+        await LoadBudgetCategoryFilterOptionsAsync();
+
+        foreach (var a in AccountFilters)
+            a.IsSelected = true;
+
+        FromDate = fromDate;
+        ToDate   = toDate;
+        SelectedBudgetCategoryFilter = BudgetCategoryFilterOptions.Contains(categoryName)
+            ? categoryName
+            : AllBudgetCategoriesFilter;
+
+        await LoadTransactionsAsync();
+    }
+
     /// <summary>Confirms with the user, then deletes the given transaction.</summary>
     public async Task DeleteTransactionAsync(TransactionRowViewModel row)
     {

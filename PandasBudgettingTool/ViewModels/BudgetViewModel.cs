@@ -25,6 +25,16 @@ public partial class BudgetViewModel : ViewModelBase
 
     public ObservableCollection<BudgetCategoryNodeViewModel> RootNodes { get; } = [];
 
+    /// <summary>Raised when a category row's Transactions button is clicked — args are the category name and the current date range.</summary>
+    public event Action<string, DateTime, DateTime>? OpenTransactionsForCategoryRequested;
+
+    public void RequestOpenTransactionsForCategory(string categoryName)
+    {
+        var fromDate = FromDate ?? DateTime.Today.AddMonths(-6);
+        var toDate   = ToDate   ?? DateTime.Today;
+        OpenTransactionsForCategoryRequested?.Invoke(categoryName, fromDate, toDate);
+    }
+
     public override async Task RefreshAsync()
     {
         RootNodes.Clear();

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
@@ -206,9 +207,21 @@ public partial class MainWindowViewModel : ViewModelBase
     [RelayCommand]
     private async Task NavigateToBudget()
     {
-        _budgetVm ??= new BudgetViewModel(_databaseService);
+        if (_budgetVm is null)
+        {
+            _budgetVm = new BudgetViewModel(_databaseService);
+            _budgetVm.OpenTransactionsForCategoryRequested += OnOpenTransactionsForCategoryRequested;
+        }
+
         NavigateTo(_budgetVm);
         await _budgetVm.RefreshAsync();
+    }
+
+    private async void OnOpenTransactionsForCategoryRequested(string categoryName, DateTime fromDate, DateTime toDate)
+    {
+        _transactionsVm ??= new TransactionsViewModel(_databaseService, _dialogService);
+        NavigateTo(_transactionsVm);
+        await _transactionsVm.FilterToBudgetCategoryAsync(categoryName, fromDate, toDate);
     }
 
     [RelayCommand]
