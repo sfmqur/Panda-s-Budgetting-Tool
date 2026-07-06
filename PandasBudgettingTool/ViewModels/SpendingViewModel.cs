@@ -90,7 +90,7 @@ public partial class SpendingViewModel : ViewModelBase
 
         // Summed per-category (not the tree's rolled-up totals) so parent/child amounts aren't double-counted.
         var nonExcludedCategories = categories.Where(c => !c.IsExcludedFromSpendingTotal).ToList();
-        var nonExcludeExpenseCats = nonExcludedCategories.Where(c => c.BudgetTarget < 0).ToList();
+        var nonExcludeExpenseCats = nonExcludedCategories.Where(c => c.BudgetTarget <= 0).ToList();
         NetCashFlow = nonExcludedCategories.Sum(c => directSpend.GetValueOrDefault(c.Name));
         TotalCashFlow = nonExcludedCategories.Sum(c => c.BudgetTarget ?? 0);
         NetExpenses = nonExcludeExpenseCats.Sum(c => directSpend.GetValueOrDefault(c.Name));
