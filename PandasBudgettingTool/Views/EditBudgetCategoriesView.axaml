@@ -48,7 +48,7 @@
 
             <DataGridCheckBoxColumn Header="Excluded From Spending Total"
                                     Binding="{Binding IsExcludedFromSpendingTotal}"
-                                    Width="180" />
+                                    Width="250" />
 
             <DataGridTextColumn Header="Monthly Budget Target"
                                 Binding="{Binding BudgetTarget}"
