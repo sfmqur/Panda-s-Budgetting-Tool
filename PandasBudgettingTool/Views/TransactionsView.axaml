@@ -62,7 +62,7 @@
                                     Width="120" />
                 <DataGridTextColumn Header="Name"
                                     Binding="{Binding Name}"
-                                    Width="400" />
+                                    Width="600" />
                 <DataGridTextColumn Header="Description"
                                     Binding="{Binding Description}"
                                     Width="*" />
