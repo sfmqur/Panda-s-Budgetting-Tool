@@ -10,7 +10,6 @@ public static class ImporterFactory
     return type switch
     {
       ImporterType.WellsFargoAcct => new WfAccount(),
-      ImporterType.WellsFargoCc => new WfCredCard(),
       _ => throw new ArgumentException($"Unknown importer type: {type}")
     };
   }

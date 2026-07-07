@@ -121,9 +121,20 @@ public partial class ImportStatementViewModel : ViewModelBase
         IsImporting   = true;
         StatusMessage = "Importing…";
 
+        var validFormat = _currentImporter.ValidateFormat(TransactionFilePath);
+        if (!validFormat)
+        {
+            await _dialogService.ConfirmAsync("Bad File Format", 
+                $"The file {TransactionFilePath} could not be imported due to a file format that doesn't"
+                +" match the importer");
+            IsImporting = false;
+            StatusMessage = "Bad File Format";
+            return; 
+        }
+
         try
         {
-            var transactions = await _currentImporter.ImportAsync(TransactionFilePath);
+            var transactions = await _currentImporter.ImportAsync(TransactionFilePath, SelectedAccountName);
 
             var imported = 0;
             foreach (var t in transactions)

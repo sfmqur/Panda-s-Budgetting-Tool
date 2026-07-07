@@ -13,8 +13,9 @@ public class Transaction
     public string Description { get; set; } = string.Empty;
     /// <summary>Negative = expense, positive = income.</summary>
     public decimal Amount { get; set; }
+
     /// <summary>Category assigned by the rules engine. References BudgetCategory.Name.</summary>
-    public string? BudgetCategoryName { get; set; }
+    public string? BudgetCategoryName { get; set; } = null;
     /// <summary>
     /// True when the user has manually set the category.
     /// The rules engine skips re-categorization for flagged transactions.
