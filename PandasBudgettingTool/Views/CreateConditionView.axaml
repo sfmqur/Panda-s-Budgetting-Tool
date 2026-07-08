@@ -45,7 +45,7 @@
                       PlaceholderText="Select operator…"
                       HorizontalAlignment="Stretch"/>
 
-            <TextBlock Text="Value *" Margin="0,4,0,0"/>
+            <TextBlock Text="Value * (string Contains is not case sensitive)" Margin="0,4,0,0"/>
             <TextBox Text="{Binding Value}" PlaceholderText="Comparison value"/>
 
             <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,20,0,0">

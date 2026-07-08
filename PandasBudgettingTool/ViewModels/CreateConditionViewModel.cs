@@ -55,7 +55,7 @@ public partial class CreateConditionViewModel : ViewModelBase
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(CreateCommand))]
-    private string? _selectedTransactionProperty;
+    private string? _selectedTransactionProperty = "Name";
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(ConditionalOptions))]
@@ -64,7 +64,7 @@ public partial class CreateConditionViewModel : ViewModelBase
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(CreateCommand))]
-    private string? _selectedConditional;
+    private string? _selectedConditional = "Contains";
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(CreateCommand))]
@@ -105,9 +105,9 @@ public partial class CreateConditionViewModel : ViewModelBase
         SelectedRuleName            = null;
         Rank                        = 0;
         SelectedAndOr               = nameof(AndOr.Or);
-        SelectedTransactionProperty = null;
+        SelectedTransactionProperty = "Name";
         IsStringProperty            = true;
-        SelectedConditional         = null;
+        SelectedConditional         = "Contains";
         Value                       = string.Empty;
     }
 

@@ -23,6 +23,14 @@ public partial class BudgetViewModel : ViewModelBase
     [ObservableProperty]
     private DateTime? _toDate = DateTime.Today;
 
+    /// <summary>Sum of each non-excluded category's own BudgetTarget where BudgetTarget is an expense target (<= 0).</summary>
+    [ObservableProperty]
+    private decimal _totalExpenses;
+
+    /// <summary>Sum of each non-excluded category's own BudgetTarget.</summary>
+    [ObservableProperty]
+    private decimal _totalCashFlow;
+
     public ObservableCollection<BudgetCategoryNodeViewModel> RootNodes { get; } = [];
 
     /// <summary>Raised when a category row's Transactions button is clicked — args are the category name and the current date range.</summary>
@@ -70,6 +78,12 @@ public partial class BudgetViewModel : ViewModelBase
 
         foreach (var root in RootNodes)
             ComputeRollup(root, directSpend, daysInRange);
+
+        // Summed per-category (not the tree's rolled-up totals) so parent/child amounts aren't double-counted.
+        var nonExcludedCategories = categories.Where(c => !c.IsExcludedFromSpendingTotal).ToList();
+        var nonExcludeExpenseCats = nonExcludedCategories.Where(c => c.BudgetTarget <= 0).ToList();
+        TotalCashFlow = nonExcludedCategories.Sum(c => c.BudgetTarget ?? 0);
+        TotalExpenses = nonExcludeExpenseCats.Sum(c => c.BudgetTarget ?? 0);
     }
 
     public override async Task SaveAsync()

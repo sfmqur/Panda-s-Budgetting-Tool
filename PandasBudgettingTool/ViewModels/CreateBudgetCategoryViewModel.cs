@@ -25,7 +25,7 @@ public partial class CreateBudgetCategoryViewModel : ViewModelBase
     private bool _isExcludedFromSpendingTotal;
 
     [ObservableProperty]
-    private decimal? _budgetTarget = 0;
+    private string _budgetTargetText = "0";
 
     [ObservableProperty]
     private bool _createAssociatedRule = true;
@@ -45,12 +45,15 @@ public partial class CreateBudgetCategoryViewModel : ViewModelBase
     {
         if (!_db.IsOpen) return;
 
+        if (!decimal.TryParse(BudgetTargetText, out var budgetTarget))
+            budgetTarget = 0;
+
         await _db.ExecuteQueryAsync("BudgetCategories/Insert.sql", new
         {
             Name,
             Parent            = string.IsNullOrEmpty(SelectedParent) ? null : SelectedParent,
             IsExcludedFromSpendingTotal,
-            BudgetTarget
+            BudgetTarget = budgetTarget
         });
 
         if (CreateAssociatedRule)
@@ -74,7 +77,7 @@ public partial class CreateBudgetCategoryViewModel : ViewModelBase
         Name = string.Empty;
         SelectedParent = null;
         IsExcludedFromSpendingTotal = false;
-        BudgetTarget = 0;
+        BudgetTargetText = "0";
         CreateAssociatedRule = true;
     }
 

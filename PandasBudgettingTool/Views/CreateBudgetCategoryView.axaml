@@ -25,11 +25,9 @@
                       Content="Exclude from spending total (e.g. transfers, savings)"
                       Margin="0,4,0,0"/>
 
-            <TextBlock Text="Monthly Budget Target (optional)" Margin="0,4,0,0"/>
-            <NumericUpDown Value="{Binding BudgetTarget}"
-                           Minimum="0"
-                           FormatString="F2"
-                           PlaceholderText="No target"/>
+            <TextBlock Text="Monthly Budget Target (minus sign on expense)" Margin="0,4,0,0"/>
+            <TextBox Text="{Binding BudgetTargetText}"
+                     PlaceholderText="No target"/>
 
             <CheckBox IsChecked="{Binding CreateAssociatedRule}"
                       Content="Create Associated Rule"
