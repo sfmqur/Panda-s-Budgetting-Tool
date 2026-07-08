@@ -1,8 +1,10 @@
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using PandasBudgettingTool.Models;
 using PandasBudgettingTool.Services;
 
@@ -29,7 +31,13 @@ public partial class EditConditionsViewModel : ViewModelBase
     [ObservableProperty]
     private string _selectedRuleFilter = AllRulesFilter;
 
+    [ObservableProperty]
+    private string _searchText = string.Empty;
+
     partial void OnSelectedRuleFilterChanged(string value) => ApplyFilter();
+
+    [RelayCommand]
+    private void ApplyFilters() => ApplyFilter();
 
     public override async Task RefreshAsync()
     {
@@ -75,9 +83,11 @@ public partial class EditConditionsViewModel : ViewModelBase
 
     private void ApplyFilter()
     {
-        var filtered = SelectedRuleFilter == AllRulesFilter
-            ? _allConditions
-            : _allConditions.Where(c => c.RuleName == SelectedRuleFilter);
+        var searchText = SearchText?.Trim() ?? string.Empty;
+
+        var filtered = _allConditions.Where(c =>
+            (SelectedRuleFilter == AllRulesFilter || c.RuleName == SelectedRuleFilter) &&
+            (searchText.Length == 0 || c.Value.Contains(searchText, StringComparison.OrdinalIgnoreCase)));
 
         Conditions.Clear();
         foreach (var c in filtered)

@@ -43,6 +43,9 @@ public partial class TransactionsViewModel : ViewModelBase
     [ObservableProperty]
     private string _selectedBudgetCategoryFilter = AllBudgetCategoriesFilter;
 
+    [ObservableProperty]
+    private string _searchText = string.Empty;
+
     // Shared dropdown option lists — row VMs hold references to these
     public ObservableCollection<string?> BudgetCategoryOptions { get; } = [null];
     public ObservableCollection<string?> AccountOptions        { get; } = [null];
@@ -198,15 +201,18 @@ public partial class TransactionsViewModel : ViewModelBase
         var includeNoAccount = AccountFilters
             .FirstOrDefault(a => a.IsNoAccount)?.IsSelected ?? true;
 
+        var searchText = SearchText?.Trim() ?? string.Empty;
+
         // Build WHERE clause dynamically because IN lists can't be static SQL
-        var sql = BuildTransactionQuery(selectedAccounts, includeNoAccount, SelectedBudgetCategoryFilter);
+        var sql = BuildTransactionQuery(selectedAccounts, includeNoAccount, SelectedBudgetCategoryFilter, searchText);
 
         var param = new
         {
             FromDate           = fromDate,
             ToDate             = toDate,
             AccountNames       = selectedAccounts,
-            BudgetCategoryName = SelectedBudgetCategoryFilter
+            BudgetCategoryName = SelectedBudgetCategoryFilter,
+            SearchText         = $"%{searchText}%"
         };
 
         var rows = await _db.QueryRawAsync<Transaction>(sql, param);
@@ -219,7 +225,8 @@ public partial class TransactionsViewModel : ViewModelBase
     private static string BuildTransactionQuery(
         IReadOnlyCollection<string> selectedAccounts,
         bool includeNoAccount,
-        string budgetCategoryFilter)
+        string budgetCategoryFilter,
+        string searchText)
     {
         var sb = new StringBuilder(
             "SELECT * FROM [Transaction] WHERE Date >= @FromDate AND Date <= @ToDate");
@@ -235,6 +242,9 @@ public partial class TransactionsViewModel : ViewModelBase
             sb.Append(" AND BudgetCategoryName IS NULL");
         else if (budgetCategoryFilter != AllBudgetCategoriesFilter)
             sb.Append(" AND BudgetCategoryName = @BudgetCategoryName");
+
+        if (!string.IsNullOrEmpty(searchText))
+            sb.Append(" AND (Name LIKE @SearchText OR Description LIKE @SearchText)");
 
         sb.Append(" ORDER BY Date DESC, Name");
         return sb.ToString();

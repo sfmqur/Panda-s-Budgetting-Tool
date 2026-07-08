@@ -23,6 +23,11 @@
                               SelectedItem="{Binding SelectedBudgetCategoryFilter}"
                               MinWidth="160"/>
 
+                    <TextBlock Text="Search:" VerticalAlignment="Center" Margin="16,0,0,0"/>
+                    <TextBox Text="{Binding SearchText}"
+                             PlaceholderText="Name or description..."
+                             MinWidth="200"/>
+
                     <Button Content="Apply Filter"
                             Command="{Binding ApplyFilterCommand}"
                             VerticalAlignment="Center"/>

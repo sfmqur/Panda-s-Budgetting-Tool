@@ -15,6 +15,15 @@
                 <ComboBox ItemsSource="{Binding RuleFilterOptions}"
                           SelectedItem="{Binding SelectedRuleFilter}"
                           MinWidth="180"/>
+
+                <TextBlock Text="Search Value:" VerticalAlignment="Center" Margin="16,0,0,0"/>
+                <TextBox Text="{Binding SearchText}"
+                         PlaceholderText="Value contains..."
+                         MinWidth="200"/>
+
+                <Button Content="Apply Filters"
+                        Command="{Binding ApplyFiltersCommand}"
+                        VerticalAlignment="Center"/>
             </StackPanel>
         </Border>
 
