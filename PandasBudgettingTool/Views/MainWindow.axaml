@@ -60,9 +60,9 @@
                 <MenuItem Header="Import Account _Statement..." Command="{Binding ImportStatementCommand}"/>
             </MenuItem>
             
-            <MenuItem Header="E_xport"/>
+            <MenuItem Header="Ex_port"/>
 
-            <MenuItem Header="_Execute">
+            <MenuItem Header="E_xecute">
                 <MenuItem Header="_Rules on All Transactions" Command="{Binding ExecuteRulesOnAllTransactionsCommand}"/>
             </MenuItem>
         </Menu>
