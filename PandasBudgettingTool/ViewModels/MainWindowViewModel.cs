@@ -320,6 +320,18 @@ public partial class MainWindowViewModel : ViewModelBase
         await _importStatementVm.RefreshAsync();
     }
 
+    // ── Execute Menu ─────────────────────────────────────────────────────────
+
+    [RelayCommand]
+    private async Task ExecuteRulesOnAllTransactions()
+    {
+        var today = DateTime.Today;
+        await _ruleEngine.ExecuteAsync(today, today, executeOnAll: true);
+
+        if (CurrentPage is not null)
+            await CurrentPage.RefreshAsync();
+    }
+
     // ── Private helpers ──────────────────────────────────────────────────────
 
     private void NavigateTo(ViewModelBase page)
