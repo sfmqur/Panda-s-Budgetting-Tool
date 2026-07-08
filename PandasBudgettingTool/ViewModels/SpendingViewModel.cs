@@ -13,8 +13,13 @@ namespace PandasBudgettingTool.ViewModels;
 public partial class SpendingViewModel : ViewModelBase
 {
     private readonly DatabaseService _db;
+    private readonly RuleEngine      _ruleEngine;
 
-    public SpendingViewModel(DatabaseService db) => _db = db;
+    public SpendingViewModel(DatabaseService db, RuleEngine ruleEngine)
+    {
+        _db         = db;
+        _ruleEngine = ruleEngine;
+    }
 
     [ObservableProperty]
     private DateTime? _fromDate = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
@@ -100,6 +105,22 @@ public partial class SpendingViewModel : ViewModelBase
     /// <summary>No editable fields on this page — just reloads and recomputes for the current date range.</summary>
     [RelayCommand]
     private async Task ApplyFilter() => await RefreshAsync();
+
+    /// <summary>Re-applies all Rules over the current date range, then reloads and recomputes.</summary>
+    [RelayCommand]
+    private async Task ExecuteRules()
+    {
+        if (!_db.IsOpen) return;
+            
+        var fromDate = FromDate ?? new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
+        var toDate   = ToDate   ?? new DateTime(
+            DateTime.Today.Year,
+            DateTime.Today.Month,
+            DateTime.DaysInMonth(DateTime.Today.Year, DateTime.Today.Month));
+
+        await _ruleEngine.ExecuteAsync(fromDate, toDate);
+        await RefreshAsync();
+    }
 
     /// <summary>Recursively rolls up budget targets and actual spend; returns this node's own (budget, spend) totals for its parent.</summary>
     private static (decimal budgetTotal, decimal spendTotal) ComputeRollup(

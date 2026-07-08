@@ -21,8 +21,9 @@ public partial class App : Application
             var configService  = new ConfigService();
             var databaseService = new DatabaseService();
             var dialogService  = new DialogService();
+            var ruleEngine     = new RuleEngine(databaseService);
 
-            var vm = new MainWindowViewModel(configService, databaseService, dialogService);
+            var vm = new MainWindowViewModel(configService, databaseService, dialogService, ruleEngine);
 
             desktop.MainWindow = new MainWindow { DataContext = vm };
 

@@ -18,4 +18,9 @@ public class Condition
     public string Conditional { get; set; } = string.Empty;
     /// <summary>The value to compare against, stored as text regardless of comparison type.</summary>
     public string Value { get; set; } = string.Empty;
+
+    public override string ToString()
+    {
+        return $"{RuleName} -  {TransactionProperty} {Conditional} {Value}";
+    }
 }

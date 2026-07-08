@@ -16,4 +16,9 @@ public class Rule
     /// Not stored on the Rule row — populated by querying the Condition table via RuleName FK.
     /// </summary>
     public List<Condition> Conditions { get; set; } = [];
+
+    public override string ToString()
+    {
+        return $"{Name} - {RuleCategoryName}";
+    }
 }

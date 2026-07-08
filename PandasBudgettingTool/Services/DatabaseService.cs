@@ -72,6 +72,12 @@ public class DatabaseService : IDisposable
         return await GetConnection().ExecuteAsync(sql, param);
     }
 
+    /// <summary>Executes a dynamically-built SQL string directly (e.g. for UPDATE statements assembled at runtime) and returns the affected row count.</summary>
+    public async Task<int> ExecuteRawAsync(string sql, object? param = null)
+    {
+        return await GetConnection().ExecuteAsync(sql, param);
+    }
+
     /// <summary>Returns the open connection for callers that need direct Dapper access.</summary>
     public SqliteConnection GetConnection()
     {

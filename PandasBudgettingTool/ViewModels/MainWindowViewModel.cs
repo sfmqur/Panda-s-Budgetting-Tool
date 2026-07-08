@@ -16,6 +16,7 @@ public partial class MainWindowViewModel : ViewModelBase
     private readonly ConfigService   _configService;
     private readonly DatabaseService _databaseService;
     private readonly DialogService   _dialogService;
+    private readonly RuleEngine      _ruleEngine;
 
     private readonly Stack<ViewModelBase> _backStack    = new();
     private readonly Stack<ViewModelBase> _forwardStack = new();
@@ -41,13 +42,14 @@ public partial class MainWindowViewModel : ViewModelBase
 
     // Design-time constructor
     public MainWindowViewModel()
-        : this(new ConfigService(), new DatabaseService(), new DialogService()) { }
+        : this(new ConfigService(), new DatabaseService(), new DialogService(), new RuleEngine(new DatabaseService())) { }
 
-    public MainWindowViewModel(ConfigService configService, DatabaseService databaseService, DialogService dialogService)
+    public MainWindowViewModel(ConfigService configService, DatabaseService databaseService, DialogService dialogService, RuleEngine ruleEngine)
     {
         _configService   = configService;
         _databaseService = databaseService;
         _dialogService   = dialogService;
+        _ruleEngine      = ruleEngine;
     }
 
     // ── Properties ───────────────────────────────────────────────────────────
@@ -229,7 +231,7 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         if (_spendingVm is null)
         {
-            _spendingVm = new SpendingViewModel(_databaseService);
+            _spendingVm = new SpendingViewModel(_databaseService, _ruleEngine);
             _spendingVm.OpenTransactionsForCategoryRequested += OnOpenTransactionsForCategoryRequested;
         }
 
@@ -242,7 +244,7 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         if (_rulesVm is null)
         {
-            _rulesVm = new RulesViewModel(_databaseService, _dialogService);
+            _rulesVm = new RulesViewModel(_databaseService, _dialogService, _ruleEngine);
             _rulesVm.OpenRuleConditionsRequested += OnOpenRuleConditionsRequested;
         }
 

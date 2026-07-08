@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using PandasBudgettingTool.Models;
 using PandasBudgettingTool.Services;
 
@@ -12,13 +14,24 @@ public partial class RulesViewModel : ViewModelBase
 {
     private readonly DatabaseService _db;
     private readonly DialogService   _dialogService;
+    private readonly RuleEngine      _ruleEngine;
     private List<RuleTreeNodeViewModel> _allRuleNodes = [];
 
-    public RulesViewModel(DatabaseService db, DialogService dialogService)
+    public RulesViewModel(DatabaseService db, DialogService dialogService, RuleEngine ruleEngine)
     {
         _db            = db;
         _dialogService = dialogService;
+        _ruleEngine    = ruleEngine;
     }
+
+    [ObservableProperty]
+    private DateTime? _fromDate = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
+
+    [ObservableProperty]
+    private DateTime? _toDate = new DateTime(
+        DateTime.Today.Year,
+        DateTime.Today.Month,
+        DateTime.DaysInMonth(DateTime.Today.Year, DateTime.Today.Month));
 
     public ObservableCollection<RuleTreeNode> RootNodes { get; } = [];
 
@@ -90,6 +103,22 @@ public partial class RulesViewModel : ViewModelBase
 
             await _db.ExecuteQueryAsync("Rules/Update.sql", row.ToUpdateParam());
         }
+    }
+
+    /// <summary>Re-applies all Rules over the selected date range, then reloads.</summary>
+    [RelayCommand]
+    private async Task ExecuteRules()
+    {
+        if (!_db.IsOpen) return;
+
+        var fromDate = FromDate ?? new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
+        var toDate   = ToDate   ?? new DateTime(
+            DateTime.Today.Year,
+            DateTime.Today.Month,
+            DateTime.DaysInMonth(DateTime.Today.Year, DateTime.Today.Month));
+
+        await _ruleEngine.ExecuteAsync(fromDate, toDate);
+        await RefreshAsync();
     }
 
     /// <summary>Confirms with the user, then deletes the rule along with all Conditions that reference it.</summary>

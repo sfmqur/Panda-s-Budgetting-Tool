@@ -37,6 +37,8 @@
 
                     <Button Content="Apply Filter" Command="{Binding ApplyFilterCommand}" VerticalAlignment="Center"
                             ToolTip.Tip="Reloads and recomputes the figures below for the selected date range"/>
+                    <Button Content="Execute Rules" Command="{Binding ExecuteRulesCommand}" VerticalAlignment="Center"
+                            ToolTip.Tip="Re-applies all Rules to Transactions in the selected date range, then reloads"/>
                 </StackPanel>
             </StackPanel>
         </Border>
