@@ -54,4 +54,10 @@
         <DependentUpon>RenameDialogWindow.axaml</DependentUpon>
       </Compile>
     </ItemGroup>
+
+    <ItemGroup>
+      <None Update="help.txt">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
 </Project>

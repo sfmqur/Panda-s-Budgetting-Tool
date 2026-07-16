@@ -40,7 +40,7 @@
                       HorizontalAlignment="Stretch"/>
 
             <CheckBox IsChecked="{Binding UserAdjustedCategory}"
-                      Content="Mark as manually categorized (prevents rule re-run)"
+                      Content="Mark as manually categorized (skips Rule Engine)"
                       Margin="0,4,0,0"/>
 
             <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,20,0,0">

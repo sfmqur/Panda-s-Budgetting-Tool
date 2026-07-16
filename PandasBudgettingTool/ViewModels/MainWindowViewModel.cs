@@ -39,6 +39,7 @@ public partial class MainWindowViewModel : ViewModelBase
     private CreateRuleCategoryViewModel? _createRuleCategoryVm;
     private CreateConditionViewModel?    _createConditionVm;
     private ImportStatementViewModel?    _importStatementVm;
+    private HelpViewModel?               _helpVm;
 
     // Design-time constructor
     public MainWindowViewModel()
@@ -260,7 +261,7 @@ public partial class MainWindowViewModel : ViewModelBase
         NavigateTo(_editConditionsVm);
     }
 
-    // ── Create Navigation ─────────────────────────────────────────────────────
+    // Create Navigation
 
     [RelayCommand]
     private async Task NavigateToCreateTransaction()
@@ -310,8 +311,6 @@ public partial class MainWindowViewModel : ViewModelBase
         NavigateTo(_createConditionVm);
     }
 
-    // ── Import Menu ──────────────────────────────────────────────────────────
-
     [RelayCommand]
     private async Task ImportStatement()
     {
@@ -319,8 +318,6 @@ public partial class MainWindowViewModel : ViewModelBase
         NavigateTo(_importStatementVm);
         await _importStatementVm.RefreshAsync();
     }
-
-    // ── Execute Menu ─────────────────────────────────────────────────────────
 
     [RelayCommand]
     private async Task ExecuteRulesOnAllTransactions()
@@ -332,7 +329,15 @@ public partial class MainWindowViewModel : ViewModelBase
             await CurrentPage.RefreshAsync();
     }
 
-    // ── Private helpers ──────────────────────────────────────────────────────
+    [RelayCommand]
+    private async Task NavigateToHelp()
+    {
+        _helpVm ??= new HelpViewModel();
+        NavigateTo(_helpVm);
+        await Task.CompletedTask;
+    }
+
+    // private methods
 
     private void NavigateTo(ViewModelBase page)
     {

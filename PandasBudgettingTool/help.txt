@@ -1,0 +1,89 @@
+﻿Panda's Budgeting Tool
+---------------------------------------
+   Sign Convention:
+ - Expense carry a - sign, ie -14.50 for McDonalds
+ - Income is positively signed  1000 for paycheck or venmo
+
+Quick Setup
+---------------------------------------
+ - Create Accounts
+ - Create Budget Categories
+ - Import Account Statements / History
+ - Look at transactions where Budget Category = None
+ - Create Conditions to auto sort transactions
+ - Or set Budget Category by hand and click the skip Rules button. 
+ - Execute Rule Engine
+
+
+Tips
+--------------------------------------
+ - BACKUP YOUR DB FILE PERIODICALLY
+ - Click Save to Save Changes you make on a page, Refresh to ensure it "stuck"
+ - Multiple db files are possible
+  - Useful for multiple people sharing the same PC, or a testing environment
+ - One Account per Bank / Financial Account
+ - If it is a one of or sparse transaction, 
+   just sort it manually and skip rules instead of adding a new condition
+ - If you want to break up a large Transaction into multiple Categories (ie a large Amazon or Walmart transaction)
+   - Create a new Transaction that adds a +offsetAmount to the original Category. A good name, goes a long way
+   - Create another transaction in the desired Category with -offsetAmount, with the same or similar name
+   - the net change on spending is 0, but organization is improved
+
+Rule Engine Logic
+-------------------------------------
+ - Forall Transactions within dateRange where skipRules = false
+   - Clear BudgetCategory
+   
+ - Forall Rules sorted by Rank ascending (start with 0)
+   - Forall Conditions in that Rule sorted by Rank ascending (start with 0)
+     -  add to query similar to this 
+     -  (cond0_0 ANDOR_0_1 cond0_1) ANDOR_0_2 cond0_2) ANDOR1_0 cond1_0) etc
+   - Set BudgetCategory of Transactions to Rule.BudgetCategory 
+         where within DateRange and not skipRules 
+                       and ((cond0_0 ANDOR_0_1 cond0_1) ANDOR_0_2 cond0_2) ANDOR1_0 cond1_0) etc)
+ 
+     Commentary: 
+ For most Rules, the conditions will all be rank 0, using OR, with the string contains some vendor name.
+ Especially for Rules auto generated and tied to a particular category. 
+
+One example is that I want Sam's Club gas to go to Gas and not Groceries.
+So I create a new Rule called Sam's Club Gas Rank 1. with conditions
+(Name contains Sams club and amount < 0) and amount > -100)  using conditions rank 0,1,2 to set my order.
+
+Accounts
+-------------------------------------
+Minus = Expense indicates the sign convention on import. 
+
+
+Transactions
+-------------------------------------
+A unique id is generated on creation or import. 
+Date|Name|Amount of the original transaction.  If you modify those properties within 
+the application, then there will not be duplicates on next import. The downside to this is that if there are two
+transactions with exactly the same date, name, and amount, then one will be skipped, this is a unique key for all 
+transactions. An account with a duplicate from another account will be skipped as well.
+
+The Description property is for personal notes and remarks, it is stored, but never interacted with in program logic. 
+
+The Rules Engine will ignore any transactions with the skip rules checked. 
+
+The Search box in the Transactions window checks if Name or Description contains the text entered. case-insensitive. 
+
+Budget Categories
+-------------------------------------
+
+Rules
+-------------------------------------
+
+
+   Rule Categories:
+Rule Categories create "Folders" for your Rules if you wish to further organize.
+
+
+Conditions
+-------------------------------------
+
+
+
+
+

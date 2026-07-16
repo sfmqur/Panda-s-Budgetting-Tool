@@ -65,6 +65,10 @@
             <MenuItem Header="E_xecute">
                 <MenuItem Header="_Rules on All Transactions" Command="{Binding ExecuteRulesOnAllTransactionsCommand}"/>
             </MenuItem>
+            
+            <MenuItem Header="_Help">
+                <MenuItem Header="_Help" Command="{Binding NavigateToHelpCommand}"/>
+            </MenuItem>
         </Menu>
 
         <!-- Toolbar -->
