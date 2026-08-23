@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
@@ -70,9 +71,13 @@ public partial class MainWindowViewModel : ViewModelBase
     [NotifyPropertyChangedFor(nameof(WindowTitle))]
     private string _currentDatabasePath = string.Empty;
 
+    private static readonly string AppVersion =
+        Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion
+        ?? "dev";
+
     public string WindowTitle => string.IsNullOrEmpty(CurrentDatabasePath)
-        ? "Panda's Budgeting Tool"
-        : $"Panda's Budgeting Tool — {Path.GetFileName(CurrentDatabasePath)}";
+        ? $"Panda's Budgeting Tool {AppVersion}"
+        : $"Panda's Budgeting Tool {AppVersion} — {Path.GetFileName(CurrentDatabasePath)}";
 
     // ── Startup / shutdown ───────────────────────────────────────────────────
 

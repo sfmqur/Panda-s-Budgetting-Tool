@@ -61,4 +61,19 @@
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
     </ItemGroup>
+
+    <Target Name="SetVersionFromGitTag" BeforeTargets="GenerateAssemblyInfo;GetAssemblyVersion">
+        <Exec Command="git describe --tags --abbrev=0"
+              ConsoleToMSBuild="true"
+              IgnoreExitCode="true"
+              StandardOutputImportance="low"
+              StandardErrorImportance="low">
+            <Output TaskParameter="ConsoleOutput" ItemName="_GitTagOutput"/>
+            <Output TaskParameter="ExitCode" PropertyName="_GitTagExitCode"/>
+        </Exec>
+        <PropertyGroup>
+            <InformationalVersion Condition="'$(_GitTagExitCode)' == '0'">@(_GitTagOutput)</InformationalVersion>
+            <InformationalVersion Condition="'$(InformationalVersion)' == ''">dev</InformationalVersion>
+        </PropertyGroup>
+    </Target>
 </Project>
