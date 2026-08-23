@@ -28,6 +28,7 @@ Tips
    - Create a new Transaction that adds a +offsetAmount to the original Category. A good name, goes a long way
    - Create another transaction in the desired Category with -offsetAmount, with the same or similar name
    - the net change on spending is 0, but organization is improved
+ - When in a dropdown with many options can type letters quickly to navigate to an item quickly
 
 Rule Engine Logic
 -------------------------------------
