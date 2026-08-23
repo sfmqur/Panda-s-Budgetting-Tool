@@ -2,7 +2,7 @@
 ---------------------------------------
    Sign Convention:
  - Expense carry a - sign, ie -14.50 for McDonalds
- - Income is positively signed  1000 for paycheck or venmo
+ - Income is positively signed  1000 for paycheck or venmo or return 
 
 Quick Setup
 ---------------------------------------
@@ -11,16 +11,17 @@ Quick Setup
  - Import Account Statements / History
  - Look at transactions where Budget Category = None
  - Create Conditions to auto sort transactions
- - Or set Budget Category by hand and click the skip Rules button. 
+ - Or set Budget Category by hand and click the skip Rules button. Save. 
  - Execute Rule Engine
 
 
 Tips
 --------------------------------------
  - BACKUP YOUR DB FILE PERIODICALLY
- - Click Save to Save Changes you make on a page, Refresh to ensure it "stuck"
+ - Click Save to Save Changes you make on a page,
+ - Refresh to ensure it "stuck", and to refresh the current page. 
  - Multiple db files are possible
-  - Useful for multiple people sharing the same PC, or a testing environment
+ - Useful for multiple people sharing the same PC, or a testing environment
  - One Account per Bank / Financial Account
  - If it is a one of or sparse transaction, 
    just sort it manually and skip rules instead of adding a new condition
@@ -29,6 +30,8 @@ Tips
    - Create another transaction in the desired Category with -offsetAmount, with the same or similar name
    - the net change on spending is 0, but organization is improved
  - When in a dropdown with many options can type letters quickly to navigate to an item quickly
+ - Navigation Arrows are your friend, can flip forwards and backwards pages quickly
+ - The Edit menu is super powerful. 
 
 Rule Engine Logic
 -------------------------------------
@@ -54,12 +57,13 @@ So I create a new Rule called Sam's Club Gas Rank 1. with conditions
 Accounts
 -------------------------------------
 Minus = Expense indicates the sign convention on import. 
+Generally this will be checked.
 
 
 Transactions
 -------------------------------------
 A unique id is generated on creation or import. 
-Date|Name|Amount of the original transaction.  If you modify those properties within 
+(Date|Name|Amount) of the original transaction.  If you modify those properties within 
 the application, then there will not be duplicates on next import. The downside to this is that if there are two
 transactions with exactly the same date, name, and amount, then one will be skipped, this is a unique key for all 
 transactions. An account with a duplicate from another account will be skipped as well.
@@ -70,12 +74,23 @@ The Rules Engine will ignore any transactions with the skip rules checked.
 
 The Search box in the Transactions window checks if Name or Description contains the text entered. case-insensitive. 
 
+
 Budget Categories
 -------------------------------------
+Spending budgets will have a negative target, income will have positive
+Can use parent to create sub categories.
+
+Excluded From Spending Total ignores this category from budget spending. 
+IE: Transfers - CreditCards (card payments), Transfers From Savings, Work Travel
+My Transfers to Savings is in Spending Total, but that is personal preference. 
+
 
 Rules
 -------------------------------------
-
+Rules contain conditions. and a target budget category.
+They are executed in Low Rank to High Rank Order. This can be used for custom sorting. 
+for example: I have a samsclub Gas Rule of higher rank to grab samsclub with amoutn -100 to 0 and put it into 
+my Gas Budget Category. 
 
    Rule Categories:
 Rule Categories create "Folders" for your Rules if you wish to further organize.
@@ -83,6 +98,18 @@ Rule Categories create "Folders" for your Rules if you wish to further organize.
 
 Conditions
 -------------------------------------
+Conditions are evaluated one at a time, from low Rank to high Rank.  
+Their And/Or Conditional applies from the previous condition result to itself
+And/Or for the first condition doesn't do anything.
+
+NOTE: string is a synonym for text. 
+Most common will be a condition at rank 0 that Contains some piece of text.
+This will search the entire transaction Name for that piece of text, it doesn't have to be at the front
+string conditions are case insensitive. 
+
+IE: books: R0, Name Contains barnes
+
+
 
 
 
