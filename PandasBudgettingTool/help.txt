@@ -32,7 +32,14 @@ Tips
  - When in a dropdown with many options can type letters quickly to navigate to an item quickly
  - Navigation Arrows are your friend, can flip forwards and backwards pages quickly
  - The Edit menu is super powerful. 
-
+ 
+ UI tips
+--------------------------------------
+ - For Dropdown menus
+  - double click when you can see the arrow, then you can type to search menu
+  - another click to open the drop down.
+  - they feel a little weird, but it's how the UI framework works. 
+  
 Rule Engine Logic
 -------------------------------------
  - Forall Transactions within dateRange where skipRules = false
