@@ -13,6 +13,8 @@ namespace PandasBudgettingTool.ViewModels;
 
 public partial class MainWindowViewModel : ViewModelBase
 {
+    private string _version = "v1.0.1";
+    
     private readonly ConfigService   _configService;
     private readonly DatabaseService _databaseService;
     private readonly DialogService   _dialogService;
@@ -50,7 +52,10 @@ public partial class MainWindowViewModel : ViewModelBase
         _configService   = configService;
         _databaseService = databaseService;
         _dialogService   = dialogService;
-        _ruleEngine      = ruleEngine;
+        _ruleEngine      = ruleEngine; 
+#if DEBUG
+        _version += "_dev";
+#endif
     }
 
     // ── Properties ───────────────────────────────────────────────────────────
@@ -71,8 +76,8 @@ public partial class MainWindowViewModel : ViewModelBase
     private string _currentDatabasePath = string.Empty;
 
     public string WindowTitle => string.IsNullOrEmpty(CurrentDatabasePath)
-        ? "Panda's Budgeting Tool"
-        : $"Panda's Budgeting Tool — {Path.GetFileName(CurrentDatabasePath)}";
+        ? $"Panda's Budgeting Tool {_version}"
+        : $"Panda's Budgeting Tool {_version} - {Path.GetFileName(CurrentDatabasePath)}";
 
     // ── Startup / shutdown ───────────────────────────────────────────────────
 

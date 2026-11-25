@@ -17,34 +17,6 @@ A desktop budgeting tool that auto-imports account statements, categorizes trans
 4. **Spending analysis** — aggregate transactions by category across date ranges; support hierarchical budget categories.
 5. **Extensible importers** — importer factory pattern so new bank formats can be added without changing core logic.
 
-## Roadmap / Tasks
-
-### Phase 1 — Foundation (current)
-- [x] Project scaffold: Avalonia + MVVM + Dapper/SQLite
-- [x] MainWindow with menu bar (File / Edit / Navigate / Import) and toolbar
-- [x] Page-based navigation shell (Transactions, Accounts, Budget, Spending, Rules)
-- [x] SQLite schema (`Queries/setup_schema.sql`)
-- [ ] `FileNewCommand` — create empty SQLite DB and run setup_schema.sql
-- [ ] `FileOpenCommand` — open existing `.db` file via dialog, set connection string
-- [ ] `FileSaveCommand` — flush / close current connection cleanly
-
-### Phase 2 — Accounts & Import
-- [ ] Accounts page: list, add, edit, delete accounts
-- [ ] Importer factory + CSV importer (column-mapped, configurable sign convention)
-- [ ] Import Statement dialog: choose account, choose file, preview rows, confirm import
-- [ ] Duplicate detection on import (hash: Date|Name|Amount)
-
-### Phase 3 — Rules Engine
-- [ ] Rules page: create/edit/delete rules with ranked ordering
-- [ ] Condition editor: TransactionProperty + Conditional + Value (string or numeric)
-- [ ] Rule runner: on import and on-demand, evaluate rules in rank order and assign BudgetCategory
-- [ ] `UserAdjustedCategory` flag — prevents rule re-run from overwriting manual overrides
-
-### Phase 4 — Transactions & Budget
-- [ ] Transactions page: filterable/sortable grid with inline category editing
-- [ ] Budget page: category tree with BudgetTarget vs. actual spend columns
-- [ ] Spending page: date-range spending summary by category hierarchy
-
 ## Data Model
 
 Sign convention: **negative amount = expense, positive = income**.
